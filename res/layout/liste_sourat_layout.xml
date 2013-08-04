@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal">
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="horizontal">	
+		<View
+			android:layout_width="1dp"
+			android:layout_height="fill_parent"
+			android:background="#999999"/>
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="vertical"
+			android:background="#FFFFFF"
+			android:paddingRight="10dp">
+			<ListView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:id = "@+id/liste_sourat_list"
+				android:drawSelectorOnTop="false"
+				android:listSelector="@drawable/list_item_selector"
+				android:textSize="20px"/>
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

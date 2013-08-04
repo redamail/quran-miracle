@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+	android:id="@+id/show_num_val_layout_root"
+    android:padding="5dp" >
+ 
+	<!--
+    <TextView
+        android:id="@+id/sq_numval_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@+id/sq_numval_text"
+        android:layout_marginTop="5px"
+        android:textSize="20px" />
+ 
+    <TextView
+        android:id="@+id/sq_harf_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@+id/sq_harf_text"
+        android:layout_marginTop="5px"
+        android:textSize="20px" >
+    </TextView>
+ 	-->
+</LinearLayout>

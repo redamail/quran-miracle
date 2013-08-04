@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+		android:title="@string/preference_frag_3_header_ar">
+
+        <CheckBoxPreference
+                android:key="edit_quran_19_miracle"
+				android:title="@string/preference_frag_3_edit_quran_19_miracle_ar"
+				android:summary=""/>
+	</PreferenceCategory>
+
+	<!--
+    <PreferenceCategory
+            android:title="dialog_based_preferences">
+
+        <EditTextPreference
+                android:key="edittext_preference"
+                android:title="title_edittext_preference"
+                android:summary="summary_edittext_preference"
+                android:dialogTitle="dialog_title_edittext_preference" />
+
+        <ListPreference
+                android:key="list_preference"
+                android:title="title_list_preference"
+                android:summary="summary_list_preference"
+				android:entries="@array/entries_list_preference"
+                android:entryValues="@array/entries_list_preference"
+                android:dialogTitle="dialog_title_list_preference" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="launch_preferences">
+
+        <PreferenceScreen
+                android:fragment="com.quran.PreferenceWithHeaders$Prefs1FragmentInner"
+                android:title="title_fragment_preference"
+                android:summary="summary_fragment_preference">
+            <extra android:name="someKey" android:value="somePrefValue" />
+        </PreferenceScreen>
+
+        <PreferenceScreen
+                android:title="title_intent_preference"
+                android:summary="summary_intent_preference">
+
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="http://www.android.com" />
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="preference_attributes">
+
+        <CheckBoxPreference
+                android:key="parent_checkbox_preference"
+                android:title="title_parent_preference"
+                android:summary="summary_parent_preference" />
+
+        <CheckBoxPreference
+                android:key="child_checkbox_preference"
+                android:dependency="parent_checkbox_preference"
+                android:layout="?android:attr/preferenceLayoutChild"
+                android:title="title_child_preference"
+                android:summary="summary_child_preference" />
+
+    </PreferenceCategory>
+	-->
+</PreferenceScreen>

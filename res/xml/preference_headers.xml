@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header android:fragment="com.quran.PreferenceWithHeaders$Prefs1Fragment"
+			android:title="@string/preference_frag_1_title_ar"
+			android:summary="@string/preference_frag_1_summary_ar" />
+	<header android:fragment="com.quran.PreferenceWithHeaders$Prefs2Fragment"
+		android:title="@string/preference_frag_2_title_ar"
+		android:summary="@string/preference_frag_2_summary_ar">
+    </header>
+	<header android:fragment="com.quran.PreferenceWithHeaders$Prefs3Fragment"
+		android:title="@string/preference_frag_3_title_ar"
+		android:summary="@string/preference_frag_3_summary_ar">
+    </header>
+	<!--
+    <header android:title="Intent"
+            android:summary="Launches an Intent.">
+        <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.android.com" />
+    </header>
+	-->
+</preference-headers>

@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+	<EditText
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/ayah_editor_text"
+		android:textSize="20px"/>
+	<Button
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="edit"
+		android:id="@+id/ayah_editor_button"
+		android:textSize="20px"/>
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textSize="20px">
+		
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/ayah_editor_report"
+			android:textSize="20px"/>
+	</ScrollView>
+	<Button
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Update hizb"
+		android:id="@+id/ayah_editor_button_update_hizb"
+		android:textSize="20px"/>
+</LinearLayout>
