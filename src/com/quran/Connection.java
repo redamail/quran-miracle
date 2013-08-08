@@ -49,11 +49,9 @@ public class Connection
 	{
 		String kalimate = "";
 		String query = "select id_ayah, kalima from kalima where id>=" + deb.getId() + " and id<=" + fin.getId();
-		//System.out.println(query);
+		System.out.println(query);
 		Cursor cur = Connection.db.rawQuery(query, new String [] {});
 		cur.moveToFirst();
-		//if (cur.getCount() > 0)
-		//{
 		int id_ayah=cur.getInt(0);
 		while (cur.isAfterLast() == false)
 		{
@@ -67,7 +65,6 @@ public class Connection
 		}
 		kalimate = kalimate + "(" + id_ayah + ") ";
 		kalimate = kalimate + "[" + getSouratNameFromId(fin.getId_sourat()) + "] ";
-		//}
 		cur.close();
 		return kalimate;
 	}
