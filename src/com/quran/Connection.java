@@ -346,10 +346,22 @@ public class Connection
 	public static void updateAyahAyah2(int idsourat, int idayah, String ayah2)
 	{
 		String query="";
-		query += "update ayah2 set ayah2='" + ayah2 + "' where id_sourat=" + idsourat + " and id_ayah=" + idayah;
+		query += "update ayah2 set ayah2='" + ayah2 + "' where id="+getId(idsourat,idayah);
 		Connection.db.execSQL(query);
 	}
+	
+	public static int getId(int idSourat, int idAyah){
+		return idSourat * 1000 + idAyah;
+	}
 
+	public static int getId(int idSourat, int idAyah, int idKalima){
+		return idSourat * 1000000 + idAyah * 1000 + idKalima;
+	}
+	
+	public static int getId(int idSourat, int idAyah, int idKalima, int idHarf){
+		return idSourat * 100000000 + idAyah * 100000 + idKalima * 100 + idHarf;
+	}
+	
 	public static void updateKalimaFromAyah(Ayah ayah)
 	{
 		updateKalima(ayah.getId_sourat(), ayah.getId_ayah(), ayah.getAyah2());
@@ -382,13 +394,13 @@ public class Connection
 			if (! kalima.equalsIgnoreCase("") && !kalima.equalsIgnoreCase(" "))
 			{
 				//System.out.println(kalima);
-				int id = idSourat * 1000000 + idAyah * 1000 + i;
+				int id = getId(idSourat,idAyah,i);
 				Connection.db.execSQL("insert into kalima(id, id_sourat, id_ayah, id_kalima, kalima) values (" + id + "," + idSourat + ", " + idAyah + ", " + i + ", '" + kalima + "')");
 				i++;
 			}
 		}
 	}
-
+	
 	public static void updateHarf(final int idSourat, final int idAyah)
 	{
 
@@ -412,7 +424,7 @@ public class Connection
 			{
 				if (!harf.equalsIgnoreCase(""))
 				{
-					int id = idSourat * 1000000000 + idAyah * 1000000 + idKalima * 1000 + i;
+					int id = getId(idSourat,idAyah,idKalima,i);
 					query += ("(" + id + "," + idSourat + ", " + idAyah + ", " + idKalima + ", " + i + ", '" + harf + "'),");
 					i++;	
 				}
