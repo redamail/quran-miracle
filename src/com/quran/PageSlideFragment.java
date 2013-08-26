@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.*;
+import android.content.*;
 
 public class PageSlideFragment extends Fragment
 {
@@ -29,8 +30,9 @@ public class PageSlideFragment extends Fragment
 	Glyph glyphDebTemp;
 	Glyph glyphFinTemp;
 	
-	int screenOrientation = -1;
-	Quran19Miracle quran19miracle;
+	//int screenOrientation = -1;
+	QuranMiracle19 quranmiracle19;
+	QuranMiracleZawj quranmiraclezawj;
 	PageActivity pageActivity;
 
 	public PageSlideFragment(int pos, PageActivity pageActivity)
@@ -56,17 +58,29 @@ public class PageSlideFragment extends Fragment
 			this.numPage = prefs.getInt("quran_current_quran_page", 1);
 		}
 
-		quran19miracle = new Quran19Miracle(numPage);
+		quranmiracle19 = new QuranMiracle19(numPage);
+		quranmiraclezawj = new QuranMiracleZawj(numPage);
 		setRetainInstance(true);
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstancrState)
 	{	
-		this.screenOrientation = getScreenOrientation();
-		Config.setORIENTATION_TYPE(this.screenOrientation);
+		Display display= ((WindowManager) this.getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay(); 
 
-		String numPageStr = (numPage > 99) ?String.valueOf(numPage): (numPage > 9) ?"0" + String.valueOf(numPage): "00" + String.valueOf(numPage);
-		Bitmap image = BitmapFactory.decodeFile(Config.getIMAGE_ADRESS()+"page" + numPageStr + ".png");
+		Config.setOrientationType(getScreenOrientation());
+
+		if(Config.getOrientationType() == Constant.ORIENTATION_TYPE_PORTRAIT){
+			Config.setQuranPagePortraitWidth(display.getWidth());
+			Config.setQuranPagePortraitHeight(display.getHeight());
+		}
+
+		if(Config.getOrientationType() == Constant.ORIENTATION_TYPE_PAYSAGE){
+			Config.setQuranPagePaysageWidth(display.getWidth());
+			Config.setQuranPagePaysageHeight(display.getHeight());
+		}
+		
+		String numPageStr = (numPage > 99) ? String.valueOf(numPage): (numPage > 9) ?"0" + String.valueOf(numPage): "00" + String.valueOf(numPage);
+		Bitmap image = BitmapFactory.decodeFile(Config.getImageAdress()+"page" + numPageStr + ".png");
 		image = image.createScaledBitmap(image, (int)Config.getImageWidth(), (int)Config.getImageHeight(), true);
 
 		RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.page_layout, null);
@@ -151,13 +165,23 @@ public class PageSlideFragment extends Fragment
 										else
 										{
 											//si clic court sur glyph miracle
-											if (Config.isSHOW_QURAN_19_MIRACLE())
+											if (Config.isShowQuranMiracle19())
 											{
-												List<Quran19Group> quran19groups = quran19miracle.isGlyphInQuran19Miracle(glyph);
-												if (!quran19groups.isEmpty())
+												List<QuranGroup> qurangroups = quranmiracle19.isGlyphInQuranMiracle(glyph);
+												if (!qurangroups.isEmpty())
 												{
-													CalculDialog calc = new CalculDialog(pageActivity, quran19groups);
-													calc.show(getActivity().getFragmentManager(), "calcul");	
+													MiracleDialog calc = new MiracleDialog19(pageActivity, qurangroups, quranmiracle19);
+													calc.show(getActivity().getFragmentManager(), "miracle19");	
+												}
+											}
+											
+											if (Config.isShowQuranMiracleZawj())
+											{
+												List<QuranGroup> qurangroups = quranmiraclezawj.isGlyphInQuranMiracle(glyph);
+												if (!qurangroups.isEmpty())
+												{
+													MiracleDialog calc = new MiracleDialogZawj(pageActivity, qurangroups, quranmiraclezawj);
+													calc.show(getActivity().getFragmentManager(), "miraclezawj");	
 												}
 											}
 										}
@@ -195,6 +219,7 @@ public class PageSlideFragment extends Fragment
 		page.setOnTouchListener(touchlistener);
 		refreshSelection();
 		refreshQuranMiracle19();
+		refreshQuranMiracleZawj();
 		showSelectionRects();
 		showEditAyahRects();
 		LinearLayout bottom_layout = new LinearLayout(this.getActivity());
@@ -245,7 +270,7 @@ public class PageSlideFragment extends Fragment
 
 	public void showSelectionRects()
 	{
-		if (Config.isSHOW_QURAN_SELECTION_RECTS())
+		if (Config.isShowQuranSelectionRects())
 		{		
 			page.selectionRects = Selection.getSelectionPageRects(numPage);
 			page.invalidate();
@@ -254,7 +279,7 @@ public class PageSlideFragment extends Fragment
 
 	public void showEditAyahRects()
 	{
-		if (Config.isSHOW_EDIT_AYAH_RECTS())
+		if (Config.isShowEditAyahRects())
 		{		
 			page.editAyahRects = Selection.getEditAyahPageRects(numPage);
 			page.invalidate();
@@ -263,14 +288,28 @@ public class PageSlideFragment extends Fragment
 
 	public void refreshQuranMiracle19()
 	{
-		System.out.println(Config.isSHOW_QURAN_19_MIRACLE());
-		if (Config.isSHOW_QURAN_19_MIRACLE())
+		if (Config.isShowQuranMiracle19())
 		{
-			quran19miracle = new Quran19Miracle(numPage);
-			page.quran19miracle = quran19miracle.getQuran19MiraclePageRect(numPage);
+			quranmiracle19 = new QuranMiracle19(numPage);
+			page.quranmiracle19 = quranmiracle19.getQuranMiraclePageRect(numPage);
 			page.invalidate();
 		}
 	}
 	
+	public void refreshQuranMiracleZawj()
+	{
+		if (Config.isShowQuranMiracleZawj())
+		{
+			quranmiraclezawj = new QuranMiracleZawj(numPage);
+			page.quranmiraclezawj = quranmiraclezawj.getQuranMiraclePageRect(numPage);
+			page.invalidate();
+		}
+	}
+	
+	public void refreshAll(){
+		refreshSelection();
+		refreshQuranMiracle19();
+		refreshQuranMiracleZawj();
+	}
 	
 }

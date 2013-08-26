@@ -7,6 +7,6 @@
 		android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
     	android:orientation="vertical"
-		android:id="@+id/calcul_dialog_linearlayout">
+		android:id="@+id/miracle_dialog_linearlayout">
 	</LinearLayout>
 </ScrollView>

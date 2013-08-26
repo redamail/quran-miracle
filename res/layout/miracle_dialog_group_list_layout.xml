@@ -5,6 +5,6 @@
     <ListView
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/calcul_dialog_list_layout_list"/>
-	
+		android:id="@+id/miracle_dialog_group_list_layout_list"/>
+
 </LinearLayout>

@@ -23,11 +23,19 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/selection_dialog_calcul_num_val_tot"/>
-		<Button
+		<LinearLayout 
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/selection_dialog_calcul_button"/>
-		/>
+			android:layout_height="fill_parent"
+			android:orientation="horizontal">	
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/selection_dialog_miracle_19_button"/>
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/selection_dialog_miracle_zawj_button"/>
+		</LinearLayout>
 	</LinearLayout>
 	<com.quran.DragSortListView
 		android:id="@+id/selection_dialog_listview"

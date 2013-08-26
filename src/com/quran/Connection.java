@@ -6,12 +6,13 @@ import android.content.Context;
 import java.security.acl.Group;
 import java.util.List;
 import java.util.ArrayList;
+import android.util.*;
 
 public class Connection
 {
 
-	static SQLiteDatabase db2 = SQLiteDatabase.openDatabase(Config.getDB2_ADRESS(), null, SQLiteDatabase.OPEN_READWRITE);
-	static SQLiteDatabase db = SQLiteDatabase.openDatabase(Config.getDB1_ADRESS(), null, SQLiteDatabase.OPEN_READWRITE);
+	static SQLiteDatabase db2 = SQLiteDatabase.openDatabase(Config.getDb2Adress(), null, SQLiteDatabase.OPEN_READWRITE);
+	static SQLiteDatabase db = SQLiteDatabase.openDatabase(Config.getDb1Adress(), null, SQLiteDatabase.OPEN_READWRITE);
 
 	public static int getSumHar(Kalima kalDeb, Kalima kalFin)
 	{
@@ -28,9 +29,8 @@ public class Connection
 		String query = "select id, id_sourat, id_ayah, id_kalima, kalima, num_value, sum_harf from kalima where id_sourat=" + sourat + " and id_ayah=" + ayah + " and id_kalima=" + kalima;
 		Cursor cur = Connection.db.rawQuery(query, new String [] {});
 		Kalima kal = null;
-		//if (cur.getCount() == 0);
 		cur.moveToFirst();
-		kal = new Kalima(cur.getInt(0), cur.getInt(1), cur.getInt(2), cur.getInt(3), cur.getInt(4), cur.getInt(5), cur.getInt(6));
+		kal = new Kalima(cur.getInt(0), cur.getInt(1), cur.getInt(2), cur.getInt(3), cur.getString(4), cur.getInt(5), cur.getInt(6));
 		cur.close();
 		return kal;
 	}
@@ -40,7 +40,7 @@ public class Connection
 		String query = "select id, id_sourat, id_ayah, id_kalima, kalima, num_value, sum_harf from kalima where id_sourat=" + glyph.getSura_number() + " and id_ayah=" + glyph.getAyah_number() + " and id_kalima=" + glyph.getKalima_number();
 		Cursor cur = Connection.db.rawQuery(query, new String [] {});
 		cur.moveToFirst();
-		Kalima kal = new Kalima(cur.getInt(0), cur.getInt(1), cur.getInt(2), cur.getInt(3), cur.getInt(4), cur.getInt(5), cur.getInt(6));
+		Kalima kal = new Kalima(cur.getInt(0), cur.getInt(1), cur.getInt(2), cur.getInt(3), cur.getString(4), cur.getInt(5), cur.getInt(6));
 		cur.close();
 		return kal;
 	}
@@ -104,8 +104,14 @@ public class Connection
 	{
 		String query = "select glyph_id, page_number, line_number, sura_number, ayah_number, position, min_x, max_x, min_y, max_y, type, kalima_number from glyphs where sura_number=" + sourat + " and ayah_number=" + ayah + " and kalima_number=" + kalima;
 		Cursor cur = Connection.db2.rawQuery(query, new String [] {});
-		cur.moveToFirst();
-		Glyph glyph = new Glyph(cur.getInt(0), cur.getInt(1), cur.getInt(2), cur.getInt(3), cur.getInt(4), cur.getInt(5), cur.getInt(6), cur.getInt(7), cur.getInt(8), cur.getInt(9), cur.getInt(10), cur.getInt(11));
+		Glyph glyph = null;
+		try{
+			cur.moveToFirst();
+			glyph = new Glyph(cur.getInt(0), cur.getInt(1), cur.getInt(2), cur.getInt(3), cur.getInt(4), cur.getInt(5), cur.getInt(6), cur.getInt(7), cur.getInt(8), cur.getInt(9), cur.getInt(10), cur.getInt(11));
+		}catch(Exception e){
+			System.err.println(e);
+			Log.i("QURAN ERROR","Error on getting glyph for Kalima ("+sourat+","+ayah+","+kalima+")");
+		}
 		cur.close();
 		return glyph;
 	}
@@ -235,56 +241,75 @@ public class Connection
 
 		//int position = 0;
 		//int nextPosition = 0;
-		int groupe = getNextQuran19MiracleGroupe();
-		query = "insert into quran_miracle_19 (sourat_deb,ayah_deb,kalima_deb,page_deb,sourat_fin,ayah_fin,kalima_fin,page_fin, position, next, groupe, type) values ";	
+		int groupe = getNextQuranMiracle19Groupe();
+		query = "insert into quran_miracle_19 (sourat_deb,ayah_deb,kalima_deb,page_deb,sourat_fin,ayah_fin,kalima_fin,page_fin, position, next, groupe, type, num_val, sum_kal, sum_har) values ";	
 
+		int i = 0;
 		for (Select sel : Selection.selects)
 		{
 			if (sel.selectionType != Selection.SELECTION_TYPE_SEPARATOR)
 			{
+				if(i>10){
+					query = query.substring(0, query.lastIndexOf(",")) + ";";
+					Connection.db.execSQL(query);
+					query = "insert into quran_miracle_zawj (sourat_deb,ayah_deb,kalima_deb,page_deb,sourat_fin,ayah_fin,kalima_fin,page_fin, position, next, groupe, type) values ";
+					i = 0;
+				}
 				query += "(" + sel.kalimaDeb.getId_sourat() + "," + sel.kalimaDeb.getId_ayah() + "," + sel.kalimaDeb.getId_kalima() + "," + sel.glyphDeb.getPage_number() + "," + sel.kalimaFin.getId_sourat() + "," + sel.kalimaFin.getId_ayah() + "," + sel.kalimaFin.getId_kalima() + "," + sel.glyphFin.getPage_number();
-				//position++;
-				//if (position == Selection.selects.size()) nextPosition = 0; else nextPosition = position + 1;
 				query += "," + sel.selPos + "," + sel.selNextPosition + "," + groupe + "," + sel.getMiracleType() + "),";
+				i++;
 			}
 		}
 
 		query = query.substring(0, query.lastIndexOf(",")) + ";";
-		//System.out.println(query);
 		Connection.db.execSQL(query);
+		Connection.db.execSQL("update quran_miracle_19 set num_val=(select sum(num_value) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_19 set sum_kal=(select count(id) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_19 set sum_har=(select sum(sum_harf) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set num_val=(select sum(num_value) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set sum_kal=(select count(id) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set sum_har=(select sum(sum_harf) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
 		return true;
 
 	}
 
-	/*
-	 public static boolean insertIntoQuranMiracle19(Context context){
-	 String query="";
+	public static boolean insertIntoQuranMiracleZawj(Context context)
+	{
+		String query="";
 
-	 int position = 0;
-	 int groupe = getNextQuran19MiracleGroupe();
-	 int miracleType = 1;
-	 //System.out.println(groupe);
-	 for(Select sel : Selection.selects){
-	 if(!query.isEmpty()){
-	 position ++;
-	 query +=","+position+","+(position+1)+","+groupe+","+sel.getMiracleType()+")";
-	 System.out.println(query);
-	 Connection.db.execSQL(query);
-	 query="";
-	 }
-	 query="insert into quran_miracle_19 (sourat_deb,ayah_deb,kalima_deb,page_deb,sourat_fin,ayah_fin,kalima_fin,page_fin, position, next, groupe, type) values";	
-	 query+="("+sel.kalimaDeb.getId_sourat()+","+sel.kalimaDeb.getId_ayah()+","+sel.kalimaDeb.getId_kalima()+","+sel.glyphDeb.getPage_number()+","+sel.kalimaFin.getId_sourat()+","+sel.kalimaFin.getId_ayah()+","+sel.kalimaFin.getId_kalima()+","+sel.glyphFin.getPage_number();
-	 miracleType = sel.getMiracleType();
-	 }
-	 position++;
-	 query +=","+position+",0,"+groupe+","+miracleType+")";
-	 System.out.println(query);
-	 Connection.db.execSQL(query);
-	 return true;
+		int groupe = getNextQuranMiracleZawjGroupe();
+		query = "insert into quran_miracle_zawj (sourat_deb,ayah_deb,kalima_deb,page_deb,sourat_fin,ayah_fin,kalima_fin,page_fin, position, next, groupe, type) values ";	
 
-	 }
-	 */
-	public static int getNextQuran19MiracleGroupe()
+		int i = 0;
+		for (Select sel : Selection.selects)
+		{
+			if (sel.selectionType != Selection.SELECTION_TYPE_SEPARATOR)
+			{
+				if(i>10){
+					query = query.substring(0, query.lastIndexOf(",")) + ";";
+					Connection.db.execSQL(query);
+					query = "insert into quran_miracle_zawj (sourat_deb,ayah_deb,kalima_deb,page_deb,sourat_fin,ayah_fin,kalima_fin,page_fin, position, next, groupe, type) values ";
+					i = 0;
+				}
+				query += "(" + sel.kalimaDeb.getId_sourat() + "," + sel.kalimaDeb.getId_ayah() + "," + sel.kalimaDeb.getId_kalima() + "," + sel.glyphDeb.getPage_number() + "," + sel.kalimaFin.getId_sourat() + "," + sel.kalimaFin.getId_ayah() + "," + sel.kalimaFin.getId_kalima() + "," + sel.glyphFin.getPage_number();
+				query += "," + sel.selPos + "," + sel.selNextPosition + "," + groupe + "," + sel.getMiracleType() + "),";
+				i++;
+			}
+		}
+
+		query = query.substring(0, query.lastIndexOf(",")) + ";";
+		Connection.db.execSQL(query);
+		Connection.db.execSQL("update quran_miracle_19 set num_val=(select sum(num_value) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_19 set sum_kal=(select count(id) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_19 set sum_har=(select sum(sum_harf) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set num_val=(select sum(num_value) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set sum_kal=(select count(id) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set sum_har=(select sum(sum_harf) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		return true;
+
+	}
+	
+	public static int getNextQuranMiracle19Groupe()
 	{
 
 		int id = 0;
@@ -301,6 +326,22 @@ public class Connection
 
 	}
 
+	public static int getNextQuranMiracleZawjGroupe()
+	{
+
+		int id = 0;
+		String query = "select max(groupe) from quran_miracle_zawj";
+		Cursor cur = Connection.db.rawQuery(query, new String [] {});
+		if (cur.getCount() > 0)
+		{
+			cur.moveToFirst();
+			id = cur.getInt(0);
+		}
+		cur.close();
+
+		return id + 1;
+
+	}
 	public static List<String[]> getGridList()
 	{
 		String query = "select id, harf, num_value from ref_harf order by num_value, id";
@@ -325,11 +366,11 @@ public class Connection
 		return numbers;
 	}
 
-	public static boolean delFromQuranMiracle19(Context context, Quran19Group group)
+	public static boolean delFromQuranMiracle19(Context context, QuranGroup group)
 	{
 		String query="";
 
-		for (Quran19Part part : group.quran19parts)
+		for (QuranPart part : group.quranparts)
 		{
 			query = "delete from quran_miracle_19 where id=" + part.id;	
 			Connection.db.execSQL(query);
@@ -338,6 +379,19 @@ public class Connection
 
 	}
 
+	public static boolean delFromQuranMiracleZawj(Context context, QuranGroup group)
+	{
+		String query="";
+
+		for (QuranPart part : group.quranparts)
+		{
+			query = "delete from quran_miracle_zawj where id=" + part.id;	
+			Connection.db.execSQL(query);
+		}
+		return true;
+
+	}
+	
 	public static void updateAyahAyah2(Ayah ayah)
 	{
 		updateAyahAyah2(ayah.getId_sourat(), ayah.getId_ayah(), ayah.getAyah2());	
@@ -390,10 +444,8 @@ public class Connection
 		int i = 1;
 		for (String kalima : kalimat)
 		{
-			//System.out.println(kalima);
 			if (! kalima.equalsIgnoreCase("") && !kalima.equalsIgnoreCase(" "))
 			{
-				//System.out.println(kalima);
 				int id = getId(idSourat,idAyah,i);
 				Connection.db.execSQL("insert into kalima(id, id_sourat, id_ayah, id_kalima, kalima) values (" + id + "," + idSourat + ", " + idAyah + ", " + i + ", '" + kalima + "')");
 				i++;
@@ -481,12 +533,8 @@ public class Connection
 			int id_ayah = cur.getInt(1);
 			int id_kalima = cur.getInt(2);
 			int id_harf = cur.getInt(3);
-//			String harf = cur.getString(4);
-
-//			System.out.println(harf);
 			query = "update harf set num_value=6 where id_sourat=" + id_sourat + " and id_ayah=" + id_ayah + " and id_kalima=" + id_kalima + " and id_harf=" + id_harf;
 
-//			query = query.substring(0, query.length() -1) + ";";
 			Connection.db.execSQL(query);
 			cur.moveToNext();
 		}
@@ -509,6 +557,14 @@ public class Connection
 		Connection.db.execSQL("update sourat set sum_ayah=(select count(id) from " + tableAyah + " where " + tableAyah + ".id_sourat = sourat.id_sourat ) " + cond2);
 
 		Connection.db.execSQL("update sourat set sum_kalima=(select sum(sum_kalima) from " + tableAyah + " where " + tableAyah + ".id_sourat = sourat.id_sourat ) " + cond2);
+		
+		Connection.db.execSQL("update quran_miracle_19 set num_val=(select sum(num_value) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_19 set sum_kal=(select count(id) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_19 set sum_har=(select sum(sum_harf) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set num_val=(select sum(num_value) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set sum_kal=(select count(id) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		Connection.db.execSQL("update quran_miracle_zawj set sum_har=(select sum(sum_harf) from kalima where id>=(select id from kalima where id_sourat=sourat_deb and id_ayah = ayah_deb and id_kalima = kalima_deb) and id<= (select id from kalima where id_sourat=sourat_fin and id_ayah = ayah_fin and id_kalima = kalima_fin))");
+		
 	}
 
 }

@@ -31,10 +31,12 @@ public class SelectionDialog extends DialogFragment
 {
 
 	public PageActivity pageActivity;
-
-	SelectionDialogAdapter adapter ;
-	DragSortListView listview ;
-
+	public SelectionDialogAdapter adapter ;
+	public DragSortListView listview ;
+	public TextView num_val_tot;
+	public TextView sum_kal_tot;
+	public TextView sum_har_tot;
+	
 	private DragSortListView.DropListener onDrop =
 	new DragSortListView.DropListener() {
 		@Override
@@ -54,6 +56,7 @@ public class SelectionDialog extends DialogFragment
 		{
 			adapter.remove(adapter.getItem(which));
 			pageActivity.refreshActiveFragments();
+			updateCalcul();
 		}
 	};
 
@@ -78,6 +81,40 @@ public class SelectionDialog extends DialogFragment
 
 		listview.setAdapter(adapter);
 		
+		num_val_tot = (TextView)view.findViewById(R.id.selection_dialog_calcul_num_val_tot);
+		num_val_tot.setTextSize(Config.getTextSize());
+		sum_kal_tot = (TextView)view.findViewById(R.id.selection_dialog_calcul_sum_kal_tot);
+		sum_kal_tot.setTextSize(Config.getTextSize());
+		sum_har_tot = (TextView)view.findViewById(R.id.selection_dialog_calcul_sum_har_tot);
+		sum_har_tot.setTextSize(Config.getTextSize());
+		
+		updateCalcul();
+		
+		Button miracle19Button = (Button)view.findViewById(R.id.selection_dialog_miracle_19_button);
+		miracle19Button.setText("من المعجزة ١٩");
+		miracle19Button.setTextSize(Config.getTextSize());
+		miracle19Button.setOnClickListener(new Button.OnClickListener(){
+				public void onClick(View p1)
+				{
+					addToMiracle19();
+				}
+			});
+		Button miracleZawjButton = (Button)view.findViewById(R.id.selection_dialog_miracle_zawj_button);
+		miracleZawjButton.setText("من معجزة تكرار الكلمة");
+		miracleZawjButton.setTextSize(Config.getTextSize());
+		miracleZawjButton.setOnClickListener(new Button.OnClickListener(){
+				public void onClick(View p1)
+				{
+					addToMiracleZawj();
+				}
+			});
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setView(view);
+		return builder.create();
+	}
+	
+	public void updateCalcul(){
+		
 		int numvaltot = 0;
 		int sumkaltot = 0;
 		int sumhartot = 0;
@@ -96,37 +133,21 @@ public class SelectionDialog extends DialogFragment
 			}
 		}
 
-		
 		String numvaltotstr = "مجموع القيم العددية : " ;
 		numvaltotstr += numvaltot + " = " + ((((numvaltot / 19) % 19) == 0) ?((numvaltot / 19 / 19) + " * 19"): (numvaltot / 19)) + " * 19 " + (((numvaltot % 19) > 0) ?" + " + (numvaltot % 19): "");
 		String sumkaltotstr = "مجموع الكلمات : " ;
 		sumkaltotstr += sumkaltot;
 		String sumhartotstr = "مجموع حروف الكلمات : " ;
 		sumhartotstr += sumhartot;
-		TextView num_val_tot = (TextView)view.findViewById(R.id.selection_dialog_calcul_num_val_tot);
 		num_val_tot.setText(numvaltotstr);
-		num_val_tot.setTextSize(Config.getTextSize());
-		TextView sum_kal_tot = (TextView)view.findViewById(R.id.selection_dialog_calcul_sum_kal_tot);
+		num_val_tot.invalidate();
 		sum_kal_tot.setText(sumkaltotstr);
-		sum_kal_tot.setTextSize(Config.getTextSize());
-		TextView sum_har_tot = (TextView)view.findViewById(R.id.selection_dialog_calcul_sum_har_tot);
+		sum_kal_tot.invalidate();
 		sum_har_tot.setText(sumhartotstr);
-		sum_har_tot.setTextSize(Config.getTextSize());
-		Button miracle19Button = (Button)view.findViewById(R.id.selection_dialog_calcul_button);
-		miracle19Button.setText("من المعجزة ١٩");
-		miracle19Button.setTextSize(Config.getTextSize());
-		miracle19Button.setOnClickListener(new Button.OnClickListener(){
-				public void onClick(View p1)
-				{
-					addTo19Miracle();
-				}
-			});
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setView(view);
-		return builder.create();
+		sum_har_tot.invalidate();
 	}
 
-	public void addTo19Miracle()
+	public void addToMiracle19()
 	{
 		if (!Selection.selects.isEmpty())
 		{
@@ -140,4 +161,17 @@ public class SelectionDialog extends DialogFragment
 		}
 	}
 
+	public void addToMiracleZawj()
+	{
+		if (!Selection.selects.isEmpty())
+		{
+			Selection.updateSelectPositions();
+			Selection.updateSelectType();
+			boolean result = Connection.insertIntoQuranMiracleZawj(this.getActivity());
+			if (result)
+			{
+				pageActivity.refreshActiveFragments();
+			}
+		}
+	}
 }

@@ -3,16 +3,40 @@ package com.quran;
 public class SearchResult
 {
 
-	private String idAyah;
+	private int idAyah;
 	private String ayah;
 	private String ayahinfo;
-	private String idSourat;
+	private int idSourat;
+	private int idKalima;
+	private String kalima;
 
-	public SearchResult(String idSourat, String idAyah, String ayah, String ayahinfo){
+	public SearchResult(int idSourat, int idAyah, String ayah, String ayahinfo, int idKalima, String kalima){
 		this.idAyah = idAyah;
 		this.ayah = ayah;
 		this.idSourat = idSourat;
 		this.ayahinfo = ayahinfo;
+		this.idKalima = idKalima;
+		this.kalima = kalima;
+	}
+
+	public void setIdKalima(int idKalima)
+	{
+		this.idKalima = idKalima;
+	}
+
+	public int getIdKalima()
+	{
+		return idKalima;
+	}
+
+	public void setKalima(String kalima)
+	{
+		this.kalima = kalima;
+	}
+
+	public String getKalima()
+	{
+		return kalima;
 	}
 
 	public void setAyahinfo(String ayahinfo)
@@ -25,12 +49,12 @@ public class SearchResult
 		return ayahinfo;
 	}
 
-	public void setIdSourat(String idSourat)
+	public void setIdSourat(int idSourat)
 	{
 		this.idSourat = idSourat;
 	}
 
-	public String getIdSourat()
+	public int getIdSourat()
 	{
 		return idSourat;
 	}
@@ -45,12 +69,12 @@ public class SearchResult
 		return ayah;
 	}
 
-	public void setIdAyah(String idAyah)
+	public void setIdAyah(int idAyah)
 	{
 		this.idAyah = idAyah;
 	}
 
-	public String getIdAyah()
+	public int getIdAyah()
 	{
 		return idAyah;
 	}

@@ -6,11 +6,11 @@ public class Kalima
 	int id_sourat;
 	int id_ayah; 
 	int id_kalima;
-	int kalima;
+	String kalima;
 	int num_value;
 	int sum_harf;
 
-	public Kalima(int id, int id_sourat, int id_ayah, int id_kalima, int kalima, int num_value, int sum_harf)
+	public Kalima(int id, int id_sourat, int id_ayah, int id_kalima, String kalima, int num_value, int sum_harf)
 	{
 		this.id = id;
 		this.id_sourat = id_sourat;
@@ -61,12 +61,12 @@ public class Kalima
 		return id_kalima;
 	}
 
-	public void setKalima(int kalima)
+	public void setKalima(String kalima)
 	{
 		this.kalima = kalima;
 	}
 
-	public int getKalima()
+	public String getKalima()
 	{
 		return kalima;
 	}

@@ -19,72 +19,104 @@ import android.content.Context;
 
 public class SearchResultActivity extends Activity
 {
-
 	TextView searchResultHeader;
-	ListView searchResultListView;
+	Button selectButton;
 	List<SearchResult> searchResultList;
+	SearchResultAdapter adapter ;
+	DragSortListView searchResultListView;
+	int searchMode;
+	String searchText;
+	
+	private DragSortListView.DropListener onDrop =
+	new DragSortListView.DropListener() {
+		@Override
+		public void drop(int from, int to)
+		{
+			SearchResult item = adapter.getItem(from);
+			adapter.remove(item);
+			adapter.insert(item, to);
+		}
+	};
 
+	private DragSortListView.RemoveListener onRemove = 
+	new DragSortListView.RemoveListener() {
+		@Override
+		public void remove(int which)
+		{
+			adapter.remove(adapter.getItem(which));
+			updateHeader();
+		}
+	};
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-
 		Intent intent = getIntent();
-		String searchText = intent.getStringExtra(Constant.CALL_PARAM_SEARCH_TEXT);
-		int searchMode = intent.getIntExtra(Constant.CALL_PARAM_SEARCH_MODE, Constant.QURAN_SEARCH_MODE_AYAT);
+		searchText = intent.getStringExtra(Constant.CALL_PARAM_SEARCH_TEXT);
+		searchMode = intent.getIntExtra(Constant.CALL_PARAM_SEARCH_MODE, Constant.QURAN_SEARCH_MODE_AYAT);
 		boolean searchComplete = intent.getBooleanExtra(Constant.CALL_PARAM_SEARCH_COMPLETE, false);
 		boolean searchConsiderAlif = intent.getBooleanExtra(Constant.CALL_PARAM_SEARCH_CONSIDER_ALIF, false);
-		boolean selectAyahKalima = intent.getBooleanExtra(Constant.CALL_PARAM_SEARCH_SELECT_AYAH_KALIMA, false);
-		
 		searchResultList = new ArrayList<SearchResult>();
+        setContentView(R.layout.search_res_layout);
 
-        setContentView(R.layout.search_res_list_layout);
+		searchResultListView = (DragSortListView) findViewById(R.id.search_res_lis_list);
 
-		searchResultListView = (ListView) findViewById(R.id.search_res_lis_list);
+		searchResultListView.setDropListener(onDrop);
+		searchResultListView.setRemoveListener(onRemove);
+
 		searchResultHeader = (TextView) findViewById(R.id.search_res_lis_header);
-
-		String header = "";
 
 		//search in quran
 		if (searchMode == Constant.QURAN_SEARCH_MODE_AYAT)
 		{
+			searchAyat(searchText, searchComplete, searchConsiderAlif);
+		}
+		if (searchMode == Constant.QURAN_SEARCH_MODE_KALIMAT)
+		{
+			searchKalimat(searchText, searchComplete, searchConsiderAlif);
+		}
 
-			searchResultList  = searchAyat(searchText, searchComplete, searchConsiderAlif );
+		updateHeader();
+		selectButton = (Button)findViewById(R.id.search_res_lis_select_button);
+		selectButton.setOnClickListener(new Button.OnClickListener(){
+				public void onClick(View p1)
+				{
+					selectResults();
+				}
+		});
+		
+		adapter = new SearchResultAdapter(this, searchResultList);
+		searchResultListView.setAdapter(adapter);
+    }
+	
+	public void updateHeader(){
+		searchResultHeader.setText(getHeaderText());
+		searchResultHeader.invalidate();
+	}
+	
+	public String getHeaderText(){
+		
+		String header = "";
+		
+		if (searchMode == Constant.QURAN_SEARCH_MODE_AYAT)
+		{
 			header = "عدد الآيات الموجودة";
 		}
 		if (searchMode == Constant.QURAN_SEARCH_MODE_KALIMAT)
 		{
-
-			searchKalimat(searchText, searchComplete, searchConsiderAlif );
 			header = "عدد الكلمات الموجودة";
 		}
 
 		header += " " + searchResultList.size();
-
-		searchResultHeader.setText(header);
-
-		SearchResultAdapter adapter = new SearchResultAdapter(this, searchResultList);
-		searchResultListView.setAdapter(adapter);
-		
-		if(selectAyahKalima ){
-			
-		}
-    }
-
-	
-	public void selectAyah()
-	{
-		for(SearchResult result : searchResultList){
-			Selection.addSelection(Integer.decode(result.getIdSourat()), Integer.decode(result.getIdSourat()));
-		}
+		header += " لبحث " + searchText;
+		return header;
 	}
-	
-	public List<SearchResult> searchAyat(String text, boolean searchComplete, boolean considerAlif)
+
+	public void searchAyat(String text, boolean searchComplete, boolean considerAlif)
 	{
-
-		List<SearchResult> searchResultList= new ArrayList<SearchResult>();
-
+		searchResultList.clear();
+		searchResultList= new ArrayList<SearchResult>();
 		String query = "select ayah2.id, ayah2.id_sourat, id_ayah, ayah, sourat ";
 		query += "from ayah2, sourat where ayah2.id_sourat = sourat.id_sourat ";
 		query += "and ";
@@ -98,7 +130,6 @@ public class SearchResultActivity extends Activity
 		}
 
 		Cursor cur = Connection.db.rawQuery(query, new String [] {});
-
 		int numRes = cur.getCount();
 
 		if (numRes > 0)
@@ -110,12 +141,17 @@ public class SearchResultActivity extends Activity
 				ayahinfo += " " + cur.getString(4) + " ";
 				ayahinfo += "آية";
 				ayahinfo += " " + cur.getString(2);
-				searchResultList.add(new SearchResult(cur.getString(1), cur.getString(2), cur.getString(3), ayahinfo));
+				searchResultList.add(new SearchResult(cur.getInt(1), cur.getInt(2), cur.getString(3), ayahinfo, 0 , null));
+				//if(selectAyahKalima) Selection.addSelection(cur.getInt(2), cur.getInt(3), cur.getInt(6));
 				cur.moveToNext();
 			}
 		}
-		
-		return searchResultList;
+	}
+	
+	public void selectResults(){
+		for(SearchResult result : searchResultList){
+			Selection.addSelection(result.getIdSourat(), result.getIdAyah(), result.getIdKalima());
+		}
 	}
 
 	public String getFiltre(String champ)
@@ -125,9 +161,7 @@ public class SearchResultActivity extends Activity
 		String c = "إ";
 		String d = "ٱ";
 		String x = "ا";
-
 		String filtre = "replace(replace(replace(replace(" + champ + ",'" + d + "','" + x + "'),'" + a + "','" + x + "'),'" + b + "','" + x + "'),'" + c + "','" + x + "')";
-
 		return filtre;
 	}
 
@@ -138,30 +172,65 @@ public class SearchResultActivity extends Activity
 		String c = "إ";
 		String d = "ٱ";
 		String x = "ا";
-
 		String convText = text.replace(a, x).replace(b, x).replace(c, x).replace(d, x);
-
 		return convText;
 	}
 
-
-
 	public void searchKalimat(String text, boolean searchComplete, boolean considerAlif)
 	{
-
-		this.searchResultList.clear();
-
+		searchResultList.clear();
+		//if (selectAyahKalima) Selection.cancelSelection();
 		text = text.replace("*", "%");
-		String query = "select distinct ayah2.id, ayah2.id_sourat, ayah2.id_ayah, ayah2.ayah2, sourat.sourat ";
-		query += "from ayah2, sourat, kalima where ayah2.id_sourat = sourat.id_sourat and ayah2.id_sourat=kalima.id_sourat and ayah2.id_ayah=kalima.id_ayah and ";
-		
+		String query = "select distinct ayah2.id, ayah2.id_sourat, ayah2.id_ayah, ayah2.ayah2, sourat.sourat, kalima.id_kalima, kalima.kalima ";
+		query += "from ayah2, sourat, kalima where (ayah2.id_sourat = sourat.id_sourat and ayah2.id_sourat=kalima.id_sourat and ayah2.id_ayah=kalima.id_ayah) ";
+
 		if (searchComplete)
 		{
-			query += ((!considerAlif) ? getFiltre("kalima"): "kalima") + " like '" + ((considerAlif) ?convertLetterA(text): text) + "'";
+			String[] split = text.split(" ");
+			String textplus = "";
+			String textmoins = "";
+			for (int i = 0; i < split.length; i++)
+			{	
+				if (split[i].startsWith("+"))
+				{
+					split[i] = split[i].replace("+", "");
+					textplus += " or " + ((!considerAlif) ? getFiltre("kalima"): "kalima") + " like '" + ((considerAlif) ?convertLetterA(split[i]): split[i]) + "'";
+				}
+				else if (split[i].startsWith("-"))
+				{
+					split[i] = split[i].replace("-", "");
+					textmoins += " and " + ((!considerAlif) ? getFiltre("kalima"): "kalima") + " not like '" + ((considerAlif) ?convertLetterA(split[i]): split[i]) + "'";	
+				}
+				else
+				{
+					textplus += " or " + ((!considerAlif) ? getFiltre("kalima"): "kalima") + " like '" + ((considerAlif) ?convertLetterA(split[i]): split[i]) + "'";
+				}
+			}
+			query += " and (1<>1 " + textplus + ") and (1=1 " + textmoins + ")";
 		}
 		else
 		{
-			query += ((!considerAlif) ? getFiltre("kalima"): "kalima") + " like '%" + ((considerAlif) ?convertLetterA(text): text) + "%'";
+			String[] split = text.split(" ");
+			String textplus = "";
+			String textmoins = "";
+			for (int i = 0; i < split.length; i++)
+			{	
+				if (split[i].startsWith("+"))
+				{
+					split[i] = split[i].replace("+", "");
+					textplus += " or " + ((!considerAlif) ? getFiltre("kalima"): "kalima") + " like '%" + ((considerAlif) ?convertLetterA(split[i]): split[i]) + "%'";
+				}
+				else if (split[i].startsWith("-"))
+				{
+					split[i] = split[i].replace("-", "");
+					textmoins += " and " + ((!considerAlif) ? getFiltre("kalima"): "kalima") + " not like '%" + ((considerAlif) ?convertLetterA(split[i]): split[i]) + "%'";	
+				}
+				else
+				{
+					textplus += " or " + ((!considerAlif) ? getFiltre("kalima"): "kalima") + " like '%" + ((considerAlif) ?convertLetterA(split[i]): split[i]) + "%'";
+				}
+			}
+			query += " and (1<>1 " + textplus + ") and (1=1 " + textmoins + ")";
 		}
 		
 		Cursor cur = Connection.db.rawQuery(query, new String [] {});
@@ -177,86 +246,12 @@ public class SearchResultActivity extends Activity
 				ayahinfo += " " + cur.getString(4) + " ";
 				ayahinfo += "آية";
 				ayahinfo += " " + cur.getString(2);
-				this.searchResultList.add(new SearchResult(cur.getString(1), cur.getString(2), cur.getString(3), ayahinfo));
+				String ayah = cur.getString(6) + " | " + cur.getString(3).replace(cur.getString(6),"<b>"+cur.getString(6)+"</b>");
+				this.searchResultList.add(new SearchResult(cur.getInt(1), cur.getInt(2), ayah, ayahinfo, cur.getInt(5),  cur.getString(6)));
 				cur.moveToNext();
 			}
 		}
 	}
 
 
-	public class SearchResultAdapter extends BaseAdapter
-	{
-
-		List<SearchResult> lsr;
-
-		LayoutInflater inflater;
-
-		public SearchResultAdapter(Context context, List<SearchResult> lsr)
-		{
-			inflater = LayoutInflater.from(context);
-			this.lsr = lsr;
-		}
-
-		public int getCount()
-		{
-			// TODO: Implement this method
-			return lsr.size();
-		}
-
-		public Object getItem(int p1)
-		{
-			// TODO: Implement this method
-			return lsr.get(p1);
-		}
-
-		public long getItemId(int p1)
-		{
-			// TODO: Implement this method
-			return p1;
-		}
-
-		public View getView(final int position, View convertView, ViewGroup parent)
-		{
-			ViewHolder holder;
-			if (convertView == null)
-			{
-				holder = new ViewHolder();
-				convertView = inflater.inflate(R.layout.search_res_layout, null);
-				holder.idAyah = (TextView) convertView.findViewById(R.id.search_res_ayah_id);
-				holder.ayah = (TextView)convertView.findViewById(R.id.search_res_ayah_text);
-				convertView.setTag(holder);
-			}
-			else
-			{
-				holder = (ViewHolder)convertView.getTag();
-			}
-			holder.idAyah.setText(lsr.get(position).getAyahinfo());
-			holder.ayah.setText(lsr.get(position).getAyah());
-			holder.ayah.setOnClickListener(new TextView.OnClickListener(){
-					public void onClick(View p1)
-					{
-
-						Intent intent = new Intent(p1.getContext(), PageActivity.class);
-						int idayah = Integer.decode(lsr.get(position).getIdAyah());
-						int idsourat = Integer.decode(lsr.get(position).getIdSourat());
-						intent.putExtra(Constant.CALL_PARAM_TYPE, Constant.PAGE_CALL_TYPE_AYAH);
-						//System.out.println(idayah);
-						//System.out.println(idsourat);
-						intent.putExtra(Constant.CALL_PARAM_NUM_AYAH, idayah);
-						intent.putExtra(Constant.CALL_PARAM_NUM_SOURAT, idsourat);
-
-						p1.getContext().startActivity(intent);
-						// TODO: Implement this method
-					}
-				});
-			// TODO: Implement this method
-			return convertView;
-		}
-
-		private class ViewHolder
-		{	
-			TextView idAyah ;
-			TextView ayah;
-		}
-	}
 }

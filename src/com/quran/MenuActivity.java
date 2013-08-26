@@ -46,25 +46,30 @@ public class MenuActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.viewpager_layout);
-
+/*
 		Display display= ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay(); 
-		int width = display.getWidth(); 
-		int height = display.getHeight(); 
 		
-		//System.out.println("width : "+width);
-		//System.out.println("height : "+height);
+		Config.setOrientationType(getScreenOrientation());
 		
-		Config.setQuranPagePortraitWidth(width);
-		Config.setQuranPagePortraitHeight(height);
+		if(Config.getOrientationType() == Constant.ORIENTATION_TYPE_PORTRAIT){
+			Config.setQuranPagePortraitWidth(display.getWidth());
+			Config.setQuranPagePortraitHeight(display.getHeight());
+		}
 		
+		if(Config.getOrientationType() == Constant.ORIENTATION_TYPE_PAYSAGE){
+			Config.setQuranPagePaysageWidth(display.getWidth());
+			Config.setQuranPagePaysageHeight(display.getHeight() * display.getWidth() / Config.getDbPageHeight());
+		}
+*/
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPagerAdapter = new MenuSlideAdapter(getSupportFragmentManager());
 		mPager.setAdapter(mPagerAdapter);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this );
 		mPager.setCurrentItem(NUM_PAGES-1);
-		Config.setSHOW_QURAN_19_MIRACLE(prefs.getBoolean("show_quran_19_miracle", true));
-		Config.setSHOW_QURAN_SELECTION_RECTS(prefs.getBoolean("show_Quran_selection_rects",true));
-		
+		Config.setShowQuranMiracle19(prefs.getBoolean("show_quran_19_miracle", true));
+		Config.setShowQuranMiracleZawj(prefs.getBoolean("show_quran_zawj_miracle", true));
+		Config.setShowQuranSelectionRects(prefs.getBoolean("show_Quran_selection_rects",true));
+		Config.setCanEditQuranMiracle(prefs.getBoolean("edit_quran_miracle", true));
 	}
 
 	@Override
@@ -117,6 +122,24 @@ public class MenuActivity extends FragmentActivity
 		if(p1 == this.QUICK_GO_PAGE){
 			
 		}
+	}
+	
+	public int getScreenOrientation()
+	{
+		//Get current screen orientation
+		int rotationType = Constant.ORIENTATION_TYPE_PORTRAIT;
+
+        Display display = ((WindowManager) this.getSystemService(this.WINDOW_SERVICE)).getDefaultDisplay();
+        int orientation = display.getRotation();
+		if (orientation == Surface.ROTATION_0 || orientation == Surface.ROTATION_180)
+		{
+			rotationType = Constant.ORIENTATION_TYPE_PORTRAIT;
+		}
+		if (orientation == Surface.ROTATION_90 || orientation == Surface.ROTATION_270)
+		{
+			rotationType = Constant.ORIENTATION_TYPE_PAYSAGE;
+		}
+		return rotationType;
 	}
 
 	public void showFragment(int fragId){

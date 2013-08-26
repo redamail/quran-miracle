@@ -11,12 +11,16 @@ public class Config
 	private static int editAyahRectsAlpha = 20;
 	private static int editAyahRectsColor = Color.RED;
 	private static int quranSelectionAlpha = 100;
-	private static int quran19MiracleAlpha = 100;
+	private static int quranMiracle19Alpha = 100;
+	private static int quranMiracleZawjAlpha = 100;
+	private static int quranMiracle19Color = Color.RED;
+	private static int quranMiracleZawjColor = Color.BLUE;
 	private static int quranSelectionColor = Color.GREEN;
-	private static boolean showQuran19Miracle = true;
+	private static boolean showQuranMiracle19 = true;
+	private static boolean showQuranMiracleZawj = true;
 	private static boolean showQuranSelectionRects = true;
 	private static boolean showEditAyahRects = true;
-	private static boolean canEditQuran19Miracle = false;
+	private static boolean canEditQuranMiracle = false;
 	private static String db2Adress = Constant.AYAHINFO_800_ADRESS;
 	private static String db1Adress = Constant.QURAN_ADRESS;
 	private static String imageAdress = Constant.IMAGE_1024_ADRESS;
@@ -25,6 +29,56 @@ public class Config
 	private static float quranPagePortraitHeight = Constant.DEFAULT_QURAN_PAGE_PORTRAIT_HEIGHT;
 	private static float quranPagePaysageWidth = Constant.DEFAULT_QURAN_PAGE_PAYSAGE_WIDTH;
 	private static float quranPagePaysageHeight = Constant.DEFAULT_QURAN_PAGE_PAYSAGE_HEIGHT;
+
+	public static void setCanEditQuranMiracle(boolean canEditQuranMiracle)
+	{
+		Config.canEditQuranMiracle = canEditQuranMiracle;
+	}
+
+	public static boolean isCanEditQuranMiracle()
+	{
+		return canEditQuranMiracle;
+	}
+
+	public static void setShowQuranMiracleZawj(boolean showQuranMiracleZawj)
+	{
+		Config.showQuranMiracleZawj = showQuranMiracleZawj;
+	}
+
+	public static boolean isShowQuranMiracleZawj()
+	{
+		return showQuranMiracleZawj;
+	}
+
+	public static void setQuranMiracleZawjColor(int quranMiracleZawjColor)
+	{
+		Config.quranMiracleZawjColor = quranMiracleZawjColor;
+	}
+
+	public static int getQuranMiracleZawjColor()
+	{
+		return quranMiracleZawjColor;
+	}
+	
+	public static void setQuranMiracleZawjAlpha(int quranMiracleZawjAlpha)
+	{
+		Config.quranMiracleZawjAlpha = quranMiracleZawjAlpha;
+	}
+
+	public static int getQuranMiracleZawjAlpha()
+	{
+		return quranMiracleZawjAlpha;
+	}
+	
+	public static void setQuranMiracle19Color(int quranMiracle19Color)
+	{
+		Config.quranMiracle19Color = quranMiracle19Color;
+	}
+
+	public static int getQuranMiracle19Color()
+	{
+		return quranMiracle19Color;
+	}
 
 	public static void setQuranPagePaysageHeight(float quranPagePaysageHeight)
 	{
@@ -77,155 +131,144 @@ public class Config
 		return textSize;
 	}
 	
-	public static void setORIENTATION_TYPE(int oRIENTATION_TYPE)
+	public static void setOrientationType(int orientationType)
 	{
-		orientationType = oRIENTATION_TYPE;
+		Config.orientationType = orientationType;
 	}
 
-	public static int getORIENTATION_TYPE()
+	public static int getOrientationType()
 	{
-		return orientationType;
+		return Config.orientationType;
 	}
 
-	public static void setQURAN_SELECTION_RECTS_ALPHA(int qURAN_SELECTION_RECTS_ALPHA)
+	public static void setQuranSelectionRectsAlpha (int quranSelectionRectsAlpha)
 	{
-		quranSelectionRectsAlpha = qURAN_SELECTION_RECTS_ALPHA;
+		Config.quranSelectionRectsAlpha = quranSelectionRectsAlpha;
 	}
 
-	public static int getQURAN_SELECTION_RECTS_ALPHA()
+	public static int getQuranSelectionRectsAlpha()
 	{
 		return quranSelectionRectsAlpha;
 	}
 
-	public static void setQURAN_SELECTION_RECTS_COLOR(int qURAN_SELECTION_RECTS_COLOR)
+	public static void setQuranSelectionRectsColor (int quranSelectionRectsColor)
 	{
-		quranSelectionRectsColor = qURAN_SELECTION_RECTS_COLOR;
+		Config.quranSelectionRectsColor = quranSelectionRectsColor;
 	}
 
-	public static int getQURAN_SELECTION_RECTS_COLOR()
+	public static int getQuranSelectionRectsColor()
 	{
 		return quranSelectionRectsColor;
 	}
 
-	public static void setEDIT_AYAH_RECTS_ALPHA(int eDIT_AYAH_RECTS_ALPHA)
+	public static void setEditAyahRectsAlpha (int editAyahRectsAlpha)
 	{
-		editAyahRectsAlpha = eDIT_AYAH_RECTS_ALPHA;
+		Config.editAyahRectsAlpha = editAyahRectsAlpha;
 	}
 
-	public static int getEDIT_AYAH_RECTS_ALPHA()
+	public static int getEditAyahRectsAlpha()
 	{
 		return editAyahRectsAlpha;
 	}
 
-	public static void setEDIT_AYAH_RECTS_COLOR(int eDIT_AYAH_RECTS_COLOR)
+	public static void setEditAyahRectsColor (int editAyahRectsColor)
 	{
-		editAyahRectsColor = eDIT_AYAH_RECTS_COLOR;
+		Config.editAyahRectsColor = editAyahRectsColor;
 	}
 
-	public static int getEDIT_AYAH_RECTS_COLOR()
+	public static int getEditAyahRectsColor()
 	{
 		return editAyahRectsColor;
 	}
 
-	public static void setQURAN_SELECTION_ALPHA(int qURAN_SELECTION_ALPHA)
+	public static void setQuranSelectionAlpha (int quranSelectionAlpha)
 	{
-		quranSelectionAlpha = qURAN_SELECTION_ALPHA;
+		Config.quranSelectionAlpha = quranSelectionAlpha;
 	}
 
-	public static int getQURAN_SELECTION_ALPHA()
+	public static int getQuranSelectionAlpha()
 	{
 		return quranSelectionAlpha;
 	}
 
-	public static void setQURAN_19_MIRACLE_ALPHA(int qURAN_19_MIRACLE_ALPHA)
+	public static void setQuranMiracle19Alpha(int quranMiracle19Alpha)
 	{
-		quran19MiracleAlpha = qURAN_19_MIRACLE_ALPHA;
+		Config.quranMiracle19Alpha = quranMiracle19Alpha;
 	}
 
-	public static int getQURAN_19_MIRACLE_ALPHA()
+	public static int getQuranMiracle19Alpha()
 	{
-		return quran19MiracleAlpha;
+		return quranMiracle19Alpha;
 	}
 
-	public static void setQURAN_SELECTION_COLOR(int qURAN_SELECTION_COLOR)
+	public static void setQuranSelectionColor (int quranSelectionColor)
 	{
-		quranSelectionColor = qURAN_SELECTION_COLOR;
+		Config.quranSelectionColor = quranSelectionColor;
 	}
 
-	public static int getQURAN_SELECTION_COLOR()
+	public static int getQuranSelectionColor()
 	{
 		return quranSelectionColor;
 	}
 
-	public static void setIMAGE_ADRESS(String iMAGE_ADRESS)
+	public static void setImageAdress(String imageAdress)
 	{
-		imageAdress = iMAGE_ADRESS;
+		Config.imageAdress = imageAdress ;
 	}
 
-	public static String getIMAGE_ADRESS()
+	public static String getImageAdress()
 	{
 		return imageAdress;
 	}
 	
-	public static void setDB1_ADRESS(String dB1_ADRESS)
+	public static void setDb1Adress(String db1Adress)
 	{
-		db1Adress = dB1_ADRESS;
+		Config.db1Adress = db1Adress;
 	}
 
-	public static String getDB1_ADRESS()
+	public static String getDb1Adress ()
 	{
 		return db1Adress;
 	}
 
-	public static void setDB2_ADRESS(String dB2_ADRESS)
+	public static void setDb2Adress (String db2Adress)
 	{
-		db2Adress = dB2_ADRESS;
+		Config.db2Adress = db2Adress ;
 	}
 
-	public static String getDB2_ADRESS()
+	public static String getDb2Adress()
 	{
 		return db2Adress;
 	}
 	
-	
-	public static void setCAN_EDIT_QURAN_19_MIRACLE(boolean CAN_EDIT_QURAN_19_MIRACLE)
+	public static void setShowEditAyahRects (boolean showEditAyahRects)
 	{
-		Config.canEditQuran19Miracle = CAN_EDIT_QURAN_19_MIRACLE;
+		Config.showEditAyahRects = showEditAyahRects ;
 	}
 
-	public static boolean isCAN_EDIT_QURAN_19_MIRACLE()
-	{
-		return canEditQuran19Miracle;
-	}
-
-	public static void setSHOW_EDIT_AYAH_RECTS(boolean sHOW_EDIT_AYAH_RECTS)
-	{
-		showEditAyahRects = sHOW_EDIT_AYAH_RECTS;
-	}
-
-	public static boolean isSHOW_EDIT_AYAH_RECTS()
+	public static boolean isShowEditAyahRects ()
 	{
 		return showEditAyahRects;
 	}
 	
 	
-	public static void setSHOW_QURAN_19_MIRACLE(boolean sHOW_QURAN_19_MIRACLE)
+	public static void setShowQuranMiracle19 (boolean showQuranMiracle19 )
 	{
-		showQuran19Miracle = sHOW_QURAN_19_MIRACLE;
+		Config.showQuranMiracle19 = showQuranMiracle19 ;
 	}
 
-	public static boolean isSHOW_QURAN_19_MIRACLE()
+	public static boolean isShowQuranMiracle19 ()
 	{
-		return showQuran19Miracle;
+		return showQuranMiracle19;
 	}
 
 	
-	public static void setSHOW_QURAN_SELECTION_RECTS(boolean sHOW_QURAN_SELECTION_RECTS)
+	public static void setShowQuranSelectionRects (boolean showQuranSelectionRects )
 	{
-		showQuranSelectionRects = sHOW_QURAN_SELECTION_RECTS;
+		Config.showQuranSelectionRects = showQuranSelectionRects ;
 	}
 
-	public static boolean isSHOW_QURAN_SELECTION_RECTS()
+	public static boolean isShowQuranSelectionRects()
 	{
 		return showQuranSelectionRects;
 	}
