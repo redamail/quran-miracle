@@ -279,6 +279,16 @@ class QuranGroup
 		return sumHar;
 	}
 	
+	public int getRepitNum(int type){
+		int repitnum = 0;
+
+		for(QuranPart part: quranparts){
+			if(part.type == type)
+				repitnum++;
+		}
+		return repitnum;
+	}
+	
 	public int getCount(int type){
 		int count = 0;
 
@@ -325,7 +335,7 @@ class QuranPart
 		this.sumHar = sumHar;
 	}
 
-	public List<Rect> getPageRect(int numPage)
+	public List<Rect> getPageRect(int numPage, int posY, int height)
 	{
 
 		Cursor cur;
@@ -347,8 +357,8 @@ class QuranPart
 		{
 			float minX = (cur.getInt(1) * Config.getRatioImageWidthDb()) + Config.getImageMinX();
 			float maxX = (cur.getInt(2) * Config.getRatioImageWidthDb()) + Config.getImageMinX();
-			float minY = (cur.getInt(4) * Config.getRatioImageHeightDb()) + Config.getImageMinY() - 5;
-			float maxY = (cur.getInt(4) * Config.getRatioImageHeightDb()) + Config.getImageMinY();
+			float minY = (cur.getInt(4) * Config.getRatioImageHeightDb()) + Config.getImageMinY() - posY;
+			float maxY = minY + height;//(cur.getInt(4) * Config.getRatioImageHeightDb()) + Config.getImageMinY() ;
 			rects.add(new Rect((int)minX, (int)minY, (int)maxX, (int)maxY));
 
 			cur.moveToNext();

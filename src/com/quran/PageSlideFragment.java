@@ -164,25 +164,36 @@ public class PageSlideFragment extends Fragment
 										//si clic court sur glyph non selectionne
 										else
 										{
+											List<QuranGroup> qurangroups19 = null;
 											//si clic court sur glyph miracle
 											if (Config.isShowQuranMiracle19())
 											{
-												List<QuranGroup> qurangroups = quranmiracle19.isGlyphInQuranMiracle(glyph);
+												qurangroups19 = quranmiracle19.isGlyphInQuranMiracle(glyph);
+												/*
 												if (!qurangroups.isEmpty())
 												{
 													MiracleDialog calc = new MiracleDialog19(pageActivity, qurangroups, quranmiracle19);
 													calc.show(getActivity().getFragmentManager(), "miracle19");	
 												}
+												*/
 											}
 											
+											List<QuranGroup> qurangroupszawj = null;
 											if (Config.isShowQuranMiracleZawj())
 											{
-												List<QuranGroup> qurangroups = quranmiraclezawj.isGlyphInQuranMiracle(glyph);
+												qurangroupszawj = quranmiraclezawj.isGlyphInQuranMiracle(glyph);
+												/*
 												if (!qurangroups.isEmpty())
 												{
 													MiracleDialog calc = new MiracleDialogZawj(pageActivity, qurangroups, quranmiraclezawj);
 													calc.show(getActivity().getFragmentManager(), "miraclezawj");	
 												}
+												*/
+											}
+											
+											if(qurangroups19 != null || qurangroupszawj  != null){
+												AllMiracleDialog calc = new AllMiracleDialog(pageActivity, glyph, quranmiracle19,  quranmiraclezawj, qurangroups19, qurangroupszawj  );
+												calc.show(getActivity().getFragmentManager(), "allmiracle");	
 											}
 										}
 									}

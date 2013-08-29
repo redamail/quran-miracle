@@ -15,6 +15,7 @@ public class MiracleDialogZawj  extends MiracleDialog
 		showNumericValueInGroup = false;
 		showKalimaSumInGroup = true;
 		showHarfSumInGroup = false;
+		showRepitNumInGroup = true;
 	}
 
 	public void getQuranPartsView(QuranGroup group, List<LinearLayout> quranGroupTypeLayout)
