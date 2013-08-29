@@ -103,12 +103,15 @@ public class PageActivity extends FragmentActivity implements ViewPager.OnPageCh
 		menu.setHeaderTitle("Select action");
 		menu.add(0, v.getId(), 0, "show selection");
 		menu.add(0, v.getId(), 0, "cancel all selections");
+		menu.add(0, v.getId(), 0, "add separator");
+		
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		if(item.getTitle()=="show selection"){showSelection();}
 		else if(item.getTitle()=="cancel all selections"){cancelSelection();}
+		else if(item.getTitle()=="add separator"){Selection.addSeparator();}
 		else {return false;}
 		return true;
 	}
@@ -203,14 +206,11 @@ public class PageActivity extends FragmentActivity implements ViewPager.OnPageCh
 	{
 		PageSlideFragment frag;
 		frag =  mPagerAdapter.getActiveFragment(mPager, activePage);
-		if (frag != null)frag.refreshSelection();
-		if (frag != null)frag.refreshQuranMiracle19();
+		if (frag != null)frag.refreshAll();
 		frag =  mPagerAdapter.getActiveFragment(mPager, activePage - 1);
-		if (frag != null)frag.refreshSelection();
-		if (frag != null)frag.refreshQuranMiracle19();
+		if (frag != null)frag.refreshAll();
 		frag =  mPagerAdapter.getActiveFragment(mPager, activePage + 1);
-		if (frag != null)frag.refreshSelection();
-		if (frag != null)frag.refreshQuranMiracle19();
+		if (frag != null)frag.refreshAll();
 	}
 }
 

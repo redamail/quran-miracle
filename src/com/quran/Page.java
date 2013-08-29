@@ -22,10 +22,11 @@ public class Page extends View
 	Canvas canvas;
 	Bitmap image;
 	List<Rect> selection = new ArrayList<Rect>();
-	List<Rect> quran19miracle = new ArrayList<Rect>();
+	List<Rect> quranmiracle19 = new ArrayList<Rect>();
+	List<Rect> quranmiraclezawj = new ArrayList<Rect>();
 	List<Rect> selectionRects = new ArrayList<Rect>();
 	List<Rect> editAyahRects = new ArrayList<Rect>();
-	int [] colors = new int[6];
+	//int [] colors = new int[6];
 	PageSlideFragment fragment;
 
 	public void setFragment(PageSlideFragment frag)
@@ -36,12 +37,12 @@ public class Page extends View
 	public Page(Context context, AttributeSet attr)
 	{
 		super(context, attr);
-		colors[0] = Color.RED;
-		colors[1] = Color.BLUE;
-		colors[2] = Color.CYAN;
-		colors[3] = Color.rgb(42,226,215);
-		colors[4] = Color.MAGENTA;
-		colors[5] = Color.YELLOW;
+		//colors[0] = Color.RED;
+		//colors[1] = Color.BLUE;
+		//colors[2] = Color.CYAN;
+		//colors[3] = Color.rgb(42,226,215);
+		//colors[4] = Color.MAGENTA;
+		//colors[5] = Color.YELLOW;
 		//colors[6] = Color.RED;
 		//colors[7] = Color.RED;
 	}
@@ -60,59 +61,71 @@ public class Page extends View
 		//affichage de la selection 
 		if (!selection.isEmpty())
 		{
-			paint.setColor(Config.getQURAN_SELECTION_COLOR());
-			paint.setAlpha(Config.getQURAN_SELECTION_ALPHA());
+			paint.setColor(Config.getQuranSelectionColor());
+			paint.setAlpha(Config.getQuranSelectionAlpha());
 			for (Rect rec : selection)
 			{
 				canvas.drawRect(rec, paint);
 			}
 		}
 
-		if (Config.isSHOW_QURAN_SELECTION_RECTS())
+		if (Config.isShowQuranSelectionRects())
 		{
 			if (!selectionRects.isEmpty())
 			{
-				paint.setColor(Config.getQURAN_SELECTION_RECTS_COLOR());
-				paint.setAlpha(Config.getQURAN_SELECTION_RECTS_ALPHA());
+				paint.setColor(Config.getQuranSelectionRectsColor());
+				paint.setAlpha(Config.getQuranSelectionRectsAlpha());
 				for (Rect rec : selectionRects)
 				{
 					canvas.drawRect(rec, paint);
 				}
 			}
 		}
-		if (Config.isSHOW_EDIT_AYAH_RECTS())
+		
+		//affichage des ayah editées
+		if (Config.isShowEditAyahRects())
 		{
 			if (!editAyahRects.isEmpty())
 			{
-				paint.setColor(Config.getEDIT_AYAH_RECTS_COLOR());
-				paint.setAlpha(Config.getEDIT_AYAH_RECTS_ALPHA());
+				paint.setColor(Config.getEditAyahRectsColor());
+				paint.setAlpha(Config.getEditAyahRectsAlpha());
 				for (Rect rec : editAyahRects)
 				{
 					canvas.drawRect(rec, paint);
 				}
 			}
 		}
-		//int i = 0;
-
-		//System.out.println(fragment.quran19miracle.quran19groups.size());
-		if (Config.isSHOW_QURAN_19_MIRACLE())
+		
+		// affichage du miracle du nombre 19
+		if (Config.isShowQuranMiracle19())
 		{
-			for (Quran19Group quran19group : fragment.quran19miracle.quran19groups)
+			for (QuranGroup qurangroup : fragment.quranmiracle19.qurangroups)
 			{
-				//System.out.println(quran19group.quran19parts.size());
-
-				for (Quran19Part part : quran19group.quran19parts)
+				for (QuranPart part : qurangroup.quranparts)
 				{
-					paint.setColor(Color.rgb(0, 0, colors[part.groupe % colors.length]));
-					paint.setAlpha(Config.getQURAN_19_MIRACLE_ALPHA());
+					paint.setColor(Config.getQuranMiracle19Color());
+					paint.setAlpha(Config.getQuranMiracle19Alpha());
 					for (Rect rec : part.getPageRect(fragment.numPage))
 					{
 						canvas.drawRect(rec, paint);
 					}
-					//if (i > 5) i = 0;
-					//else 
-					//if (part.nextPosition == 0)
-					//	i++;
+				}
+			}
+		}
+		
+		// affichage du miracle zawj
+		if (Config.isShowQuranMiracleZawj())
+		{
+			for (QuranGroup qurangroup : fragment.quranmiraclezawj.qurangroups)
+			{
+				for (QuranPart part : qurangroup.quranparts)
+				{
+					paint.setColor(Config.getQuranMiracleZawjColor());
+					paint.setAlpha(Config.getQuranMiracleZawjAlpha());
+					for (Rect rec : part.getPageRect(fragment.numPage))
+					{
+						canvas.drawRect(rec, paint);
+					}
 				}
 			}
 		}

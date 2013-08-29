@@ -15,9 +15,8 @@ public class Selection
 	static final int SELECTION_TYPE_AYAH=2;
 	static final int SELECTION_TYPE_MULTI=3;
 	static final int SELECTION_TYPE_SEPARATOR=4;
-	static final int SELECTION_MIRACLE_TYPE_SOURCE=1;
-	static final int SELECTION_MIRACLE_TYPE_EXPLICATION=2;
-	//static int separatorPosition = 0;
+	//static final int SELECTION_MIRACLE_TYPE_SOURCE=1;
+	//static final int SELECTION_MIRACLE_TYPE_EXPLICATION=2;
 	static List<Select> selects = new ArrayList<Select>();
 	static int nextSelPos = 0;
 
@@ -33,6 +32,14 @@ public class Selection
 		Selection.endSelect(kalFin, glyFin, ayah);
 	}
 
+	public static void addSelection(int idSourat, int idAyah, int idKalima)
+	{
+		Kalima kalDeb = Connection.getKalimaKalimaId(idSourat, idAyah, idKalima);
+		Glyph glyDeb = Connection.getGlyphKalima(kalDeb);
+		Selection.startSelect(kalDeb, glyDeb, Selection.SELECTION_TYPE_GLYPH); 
+		Selection.endSelect(kalDeb, glyDeb, null);
+	}
+	
 	public static boolean isGlyphInSelection(Glyph glyph)
 	{
 
@@ -59,6 +66,11 @@ public class Selection
 
 		return retour;
 	}
+	
+	public static void addSeparator(){
+		Select separator = new Select(null, null, SELECTION_TYPE_SEPARATOR);
+		selects.add(separator);
+	}
 
 	public static void startSelect(Kalima kalDeb, Glyph glyDeb, int selType)
 	{
@@ -68,8 +80,7 @@ public class Selection
 		
 		if (selects.isEmpty())
 		{
-			Select separator = new Select(null, null, SELECTION_TYPE_SEPARATOR);
-			selects.add(separator);
+			addSeparator();
 		}
 		int sepPos = getSeparatorPosition();
 	
@@ -85,7 +96,7 @@ public class Selection
 			for(Select sel : selects){
 				if(sel.selectionType == SELECTION_TYPE_SEPARATOR){
 					sepPos = i;
-					break;
+					//break;
 				}
 				i++;
 			}
@@ -146,9 +157,17 @@ public class Selection
 			lastsel.kalimaDeb = kalFin;
 			kalFin = kalimaTemp;
 		}
+		
+		lastsel.setFin(kalFin, glyFin, ayah);
+		
+		int numval = Connection.getNumVal(lastsel.kalimaDeb, lastsel.kalimaFin);
+		int sumkal = Connection.getSumKal(lastsel.kalimaDeb, lastsel.kalimaFin);
+		int sumhar = Connection.getSumHar(lastsel.kalimaDeb, lastsel.kalimaFin);
+		lastsel.setCalc(numval,sumkal, sumhar);
+		
 		selectStarted = false;
 		selectionOk = true;
-		lastsel.setFin(kalFin, glyFin, ayah);	
+		
 	}
 
 	public static void cancelSelection()
@@ -280,19 +299,13 @@ public class Selection
 	}
 	
 	public static void updateSelectType(){
-		boolean afterSeparator = false;
+		int type = 1;
 		for(Select sel : selects){
 			if(sel.selectionType == SELECTION_TYPE_SEPARATOR){
-				afterSeparator = true;
+				type++;
 				continue;
 			}
-			if(afterSeparator){
-				sel.setMiracleType(SELECTION_MIRACLE_TYPE_EXPLICATION);
-				
-			}else{
-				sel.setMiracleType(SELECTION_MIRACLE_TYPE_SOURCE);
-				
-			}
+			sel.setMiracleType(type);
 		}
 	}
 	
@@ -316,7 +329,6 @@ public class Selection
 
 class Select
 {
-
 	public void setMiracleType(int miracleType)
 	{
 		this.miracleType = miracleType;
@@ -334,6 +346,13 @@ class Select
 		this.ayah = ayah;
 	}
 
+	public void setCalc(int numVal, int sumKal, int sumHar)
+	{
+		this.numVal = numVal;
+		this.sumKal = sumKal;
+		this.sumHar = sumHar;
+	}
+	
 	public Select(Kalima kalimaDeb, Kalima kalimaFin, Glyph glyphDeb, Glyph glyphFin, int selectionType, Ayah ayah)
 	{
 		this.kalimaDeb = kalimaDeb;
@@ -342,7 +361,6 @@ class Select
 		this.glyphFin = glyphFin;
 		this.selectionType = selectionType;
 		this.ayah = ayah;
-		//this.selPos = Selection.nextSelPos++;
 	}
 
 	public Select(Kalima kalDeb, Glyph glyDeb, int selType)
@@ -358,7 +376,10 @@ class Select
 	Kalima kalimaFin;
 	Glyph glyphFin;
 	Ayah ayah;
-	int miracleType = Selection.SELECTION_MIRACLE_TYPE_SOURCE;
+	int miracleType;
 	int selPos;
 	int selNextPosition;
+	int numVal;
+	int sumKal;
+	int sumHar;
 }

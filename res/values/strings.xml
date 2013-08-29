@@ -41,6 +41,8 @@
 	<string name="preference_frag_2_summary_ar">عرض القيم العددية</string>
 	<string name="preference_frag_1_show_quran_19_miracle_en">Show Quran 19 Miracle</string>
 	<string name="preference_frag_1_show_quran_19_miracle_ar">عرض معجزة العدد 19</string>
+	<string name="preference_frag_1_show_quran_zawj_miracle_en">Show Quran Zawj Miracle</string>
+	<string name="preference_frag_1_show_quran_zawj_miracle_ar">عرض معجزة تكرار الكلمة</string>
 	<string name="preference_frag_1_show_quran_selection_rects_en">Show Selection Rects</string>
 	<string name="preference_frag_1_show_quran_selection_rects_ar">عرض مساعدة الإختيار</string>
 	<string name="preference_frag_2_show_num_val_title_en">Show numeric values</string>
@@ -61,8 +63,8 @@
 	<string name="preference_frag_3_title_ar">التغييرات</string>
 	<string name="preference_frag_3_summary_en">Edit Miracles</string>
 	<string name="preference_frag_3_summary_ar">التغيير في المعجزة</string>
-	<string name="preference_frag_3_edit_quran_19_miracle_en">Edit Quran 19 Miracle</string>
-	<string name="preference_frag_3_edit_quran_19_miracle_ar">تغيير معجزة العدد 19</string>
+	<string name="preference_frag_3_edit_quran_miracle_en">Edit Quran Miracle</string>
+	<string name="preference_frag_3_edit_quran_miracle_ar">تغيير المعجزة </string>
 	<string name="quran">Quran</string>
 	<string name="quick_go_button_txt_ar">إذهب الى الصفحة</string>
 	<string name="quick_go_button_txt_en">Go to page</string>

@@ -23,58 +23,38 @@ import android.support.v4.view.ViewPager;
 
 public class SelectionDialogAdapter extends ArrayAdapter<Select>
 {
-	private LayoutInflater mInflater;
+	LayoutInflater mInflater;
 	PageActivity pageActivity;;
-	
+
 	public SelectionDialogAdapter(List<Select> selects, PageActivity pageActivity)
 	{
 		super(pageActivity, R.layout.selection_dialog_item_layout, R.id.selection_dialog_item_textview_ayah, selects);
 		this.pageActivity = pageActivity;
 		mInflater = LayoutInflater.from(this.getContext());
-		
 	}
 
 	public View getView(final int position, View convertView, ViewGroup parent)
 	{
-
-		ViewHolder holder = null;
-
-
+		ViewHolder holder = new ViewHolder();
 		Select sel = getItem(position);
-
-			holder = new ViewHolder();
-
-			if (sel.selectionType != Selection.SELECTION_TYPE_SEPARATOR)
-			{
-				convertView = mInflater.inflate(R.layout.selection_dialog_item_layout, null);
-				
-				convertView.setTag(holder);
-
-			}
-			else
-			{
-				convertView  = mInflater.inflate(R.layout.section_div, parent, false);
-			}
-
-		//System.out.println("position : " + position);
-
-		//System.out.println("sep_position : " + Selection.getSeparatorPosition());
-
 
 		if (sel.selectionType != Selection.SELECTION_TYPE_SEPARATOR)
 		{
+			convertView = mInflater.inflate(R.layout.selection_dialog_item_layout, null);
+			convertView.setTag(holder);
+		}
+		else
+		{
+			convertView  = mInflater.inflate(R.layout.section_div, parent, false);
+		}
 
-			
+		if (sel.selectionType != Selection.SELECTION_TYPE_SEPARATOR)
+		{	
 			holder.ayah = (TextView)convertView.findViewById(R.id.selection_dialog_item_textview_ayah);
 			holder.numval = (TextView)convertView.findViewById(R.id.selection_dialog_item_textview_numval);
 			holder.sumkal = (TextView)convertView.findViewById(R.id.selection_dialog_item_textview_sumkal);
 			holder.sumhar = (TextView)convertView.findViewById(R.id.selection_dialog_item_textview_sumhar);
 
-			//System.out.println("sel ayah : " + sel.kalimaDeb.getId_ayah());
-			//System.out.println("id deb : " + sel.kalimaDeb.getId());
-			//System.out.println("id fin : " + sel.kalimaFin.getId());
-			
-			//System.out.println("sel.getMiracleType() : " + sel.getMiracleType());
 			//add view hier
 			int numval = Connection.getNumVal(sel.kalimaDeb, sel.kalimaFin);
 			int sumkal = Connection.getSumKal(sel.kalimaDeb, sel.kalimaFin);
@@ -107,9 +87,7 @@ public class SelectionDialogAdapter extends ArrayAdapter<Select>
 			holder.sumkal.setTextSize(Config.getTextSize());
 			holder.sumhar.setText(sumharstr);
 			holder.sumhar.setTextSize(Config.getTextSize());
-			
 			holder.ayah.setOnClickListener(new TextView.OnClickListener(){
-
 					public void onClick(View p1)
 					{
 						int numPage = Connection.getNumPage(getItem(position).kalimaDeb.getId_sourat(), getItem(position).kalimaDeb.getId_ayah());
@@ -120,25 +98,19 @@ public class SelectionDialogAdapter extends ArrayAdapter<Select>
 			if (sel.selectionType == Selection.SELECTION_TYPE_AYAH)
 			{	
 				holder.ayah.setOnLongClickListener(new TextView.OnLongClickListener(){
-
 						public boolean onLongClick(View p1)
 						{
 							Intent intent = new Intent(p1.getContext(), AyahEditorActivity.class);
-
 							intent.putExtra(Constant.CALL_PARAM_NUM_AYAH, getItem(position).kalimaDeb.getId_ayah());
 							intent.putExtra(Constant.CALL_PARAM_NUM_SOURAT, getItem(position).kalimaDeb.getId_sourat());
 							p1.getContext().startActivity(intent);
-
 							return false;
 						}
 					});
 			}
 		}
-
-
 		return convertView;
 	}
-
 
 	static class ViewHolder
 	{
@@ -159,9 +131,7 @@ public class SelectionDialogAdapter extends ArrayAdapter<Select>
 	public void showPage2(int numPage)
 	{
 		int current_item = PageActivity.getPosFromArPage(numPage);
-		
 		pageActivity.getViewPager().setCurrentItem(current_item);
 	}
-
 }
 

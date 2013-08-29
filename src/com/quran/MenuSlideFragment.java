@@ -67,20 +67,17 @@ public class MenuSlideFragment extends Fragment
 		super();
 		setRetainInstance(true);
 		System.out.println("Constructeur vide appelé : " + numPage);
-		//System.out.println(1/0);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 
-		//System.out.println(savedInstanceState);
-
 		super.onCreate(savedInstanceState);
 		
 		if (savedInstanceState != null)
 		{
-			System.out.println(savedInstanceState.containsKey("numPage"));
+			//System.out.println(savedInstanceState.containsKey("numPage"));
 			numPage  = savedInstanceState.getInt("numPage");
 		}
 		else
@@ -160,15 +157,6 @@ public class MenuSlideFragment extends Fragment
 					}
 				});
 
-			/*
-			 ArrayAdapter<String> autocompleteAdapter = new ArrayAdapter<String>(itemMenu.getContext(),
-			 android.R.layout.simple_dropdown_item_1line, listsouratstring);
-			 autocomplete = (AutoCompleteTextView) itemMenu.findViewById(R.id.quick_go_autocomplete);
-			 autocomplete.setAdapter(autocompleteAdapter );
-			 */
-			//On récupère le tableau de String créé dans le fichier string.xml
-			//String[] tableauString = getResources().getStringArray(R.array.tableau);
-
 			//On récupère l'AutoCompleteTextView que l'on a créé dans le fichier main.xml
 			List<String> listsouratautocomplete = new ArrayList<String>();
 
@@ -179,8 +167,6 @@ public class MenuSlideFragment extends Fragment
 
 			final AutoCompleteTextView autoComplete = (AutoCompleteTextView) itemMenu.findViewById(R.id.quick_go_autocomplete);
 
-			//On crée la liste d'autocomplétion à partir de notre tableau de string appelé tableauString
-			//android.R.layout.simple_dropdown_item_1line permet de définir le style d'affichage de la liste
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(),
 																	android.R.layout.simple_dropdown_item_1line, listsouratautocomplete);
 			//On affecte cette liste d'autocomplétion à notre objet d'autocomplétion

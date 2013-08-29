@@ -36,9 +36,10 @@ public class PreferenceWithHeaders extends PreferenceActivity {
 	@Override
     public void onDestroy() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		Config.setSHOW_QURAN_19_MIRACLE(sp.getBoolean("show_quran_19_miracle", true));
-		Config.setSHOW_QURAN_SELECTION_RECTS(sp.getBoolean("show_Quran_selection_rects", true));
-		Config.setCAN_EDIT_QURAN_19_MIRACLE(sp.getBoolean("edit_quran_19_miracle", true));
+		Config.setShowQuranMiracle19(sp.getBoolean("show_quran_19_miracle", true));
+		Config.setShowQuranMiracleZawj(sp.getBoolean("show_quran_zawj_miracle", true));
+		Config.setShowQuranSelectionRects(sp.getBoolean("show_Quran_selection_rects", true));
+		Config.setCanEditQuranMiracle(sp.getBoolean("edit_quran_miracle", true));
 		super.onDestroy();
 	
     }

@@ -6,8 +6,8 @@
 		android:title="@string/preference_frag_3_header_ar">
 
         <CheckBoxPreference
-                android:key="edit_quran_19_miracle"
-				android:title="@string/preference_frag_3_edit_quran_19_miracle_ar"
+                android:key="edit_quran_miracle"
+				android:title="@string/preference_frag_3_edit_quran_miracle_ar"
 				android:summary=""/>
 	</PreferenceCategory>
 
