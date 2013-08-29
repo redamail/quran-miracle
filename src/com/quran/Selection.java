@@ -15,15 +15,12 @@ public class Selection
 	static final int SELECTION_TYPE_AYAH=2;
 	static final int SELECTION_TYPE_MULTI=3;
 	static final int SELECTION_TYPE_SEPARATOR=4;
-	//static final int SELECTION_MIRACLE_TYPE_SOURCE=1;
-	//static final int SELECTION_MIRACLE_TYPE_EXPLICATION=2;
 	static List<Select> selects = new ArrayList<Select>();
 	static int nextSelPos = 0;
 
 	public static void addSelection(int idSourat, int idAyah)
 	{
 		Ayah ayah = Connection.getAyahAyahId(idSourat, idAyah);
-
 		Kalima kalDeb = Connection.getKalimaKalimaId(ayah.getId_sourat(), ayah.getId_ayah(), 1);
 		Glyph glyDeb = Connection.getGlyphKalima(kalDeb);
 		Selection.startSelect(kalDeb, glyDeb, Selection.SELECTION_TYPE_AYAH); 
@@ -42,7 +39,6 @@ public class Selection
 	
 	public static boolean isGlyphInSelection(Glyph glyph)
 	{
-
 		boolean retour = false;
 		Cursor cur;
 		String query;
@@ -63,7 +59,6 @@ public class Selection
 				cur.close();
 			}
 		}
-
 		return retour;
 	}
 	
@@ -78,14 +73,14 @@ public class Selection
 		selectionOk = false;
 		Select select = new Select(kalDeb, glyDeb, selType);
 		
-		if (selects.isEmpty())
-		{
-			addSeparator();
-		}
-		int sepPos = getSeparatorPosition();
+//		if (selects.isEmpty())
+//		{
+//			addSeparator();
+//		}
+//		
+		//int sepPos = getSeparatorPosition();
 	
-		selects.add(sepPos,  select);
-		//separatorPosition ++;
+		selects.add(select);
 		
 	}
 	
@@ -96,12 +91,10 @@ public class Selection
 			for(Select sel : selects){
 				if(sel.selectionType == SELECTION_TYPE_SEPARATOR){
 					sepPos = i;
-					//break;
 				}
 				i++;
 			}
 		}
-		
 		return sepPos;
 	}
 
@@ -111,7 +104,6 @@ public class Selection
 		if (!selects.isEmpty())
 		{
 			selects.remove(getSeparatorPosition() - 1);
-			//separatorPosition --;
 			if (!selects.isEmpty())selectionOk = true;
 		}
 	}
@@ -148,6 +140,9 @@ public class Selection
 
 		Select lastsel = getLastSelect();
 
+		System.out.println(lastsel);
+		System.out.println(lastsel.glyphDeb);
+		
 		if (lastsel.glyphDeb.getGlyph_id() > glyFin.getGlyph_id())
 		{
 			Glyph glyphTemp = lastsel.glyphDeb;
@@ -189,7 +184,15 @@ public class Selection
 
 	public static Select getLastSelect()
 	{
-		return selects.get(getSeparatorPosition() - 1);
+		Select sel = null;
+		
+		for(int i = selects.size() - 1; i >0; i--){
+			if(selects.get(i).selectionType != SELECTION_TYPE_SEPARATOR){
+				sel = selects.get(i);
+				break;
+			}
+		}
+		return sel;
 	}
 
 	public static List<Rect> getSelectPageRect(int numPage)

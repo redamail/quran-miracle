@@ -105,7 +105,7 @@ public class Page extends View
 				{
 					paint.setColor(Config.getQuranMiracle19Color());
 					paint.setAlpha(Config.getQuranMiracle19Alpha());
-					for (Rect rec : part.getPageRect(fragment.numPage))
+					for (Rect rec : part.getPageRect(fragment.numPage, 3, 3))
 					{
 						canvas.drawRect(rec, paint);
 					}
@@ -122,7 +122,7 @@ public class Page extends View
 				{
 					paint.setColor(Config.getQuranMiracleZawjColor());
 					paint.setAlpha(Config.getQuranMiracleZawjAlpha());
-					for (Rect rec : part.getPageRect(fragment.numPage))
+					for (Rect rec : part.getPageRect(fragment.numPage, 0, 3))
 					{
 						canvas.drawRect(rec, paint);
 					}

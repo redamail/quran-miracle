@@ -12,5 +12,6 @@ public class MiracleDialog19 extends MiracleDialog
 		showNumericValueInGroup = true;
 		showKalimaSumInGroup = false;
 		showHarfSumInGroup = false;
+		showRepitNumInGroup = false;
 	}
 }

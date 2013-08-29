@@ -39,6 +39,7 @@ public class MiracleDialog extends DialogFragment
 	public boolean showNumericValueInGroup = true;
 	public boolean showKalimaSumInGroup = true;
 	public boolean showHarfSumInGroup = true;
+	public boolean showRepitNumInGroup = true;
 
 	public MiracleDialog(PageActivity pageActivity, List<QuranGroup> qurangroups, QuranMiracle quranMiracle)
 	{
@@ -120,89 +121,7 @@ public class MiracleDialog extends DialogFragment
 		buttonsLayout.addView(selectGroupe);
 		return buttonsLayout;
 	}
-
-	public View getTotalGroupType2View(QuranGroup group)
-	{
-		LinearLayout calculTotType2 = new LinearLayout(getActivity());
-		calculTotType2.setOrientation(LinearLayout.VERTICAL);
-		calculTotType2.setBackgroundColor(Color.GREEN);
-
-		String numvalstr = "مجموع القيم العددية : " ;
-		numvalstr += group.getNumVal(2) + " = " + ((((group.getNumVal(2) / 19) % 19) == 0) ?((group.getNumVal(2) / 19 / 19) + " * 19"): (group.getNumVal(2) / 19)) + " * 19 " + (((group.getNumVal(2) % 19) > 0) ?" + " + (group.getNumVal(2) % 19): "");
-		TextView num_val_tot = new TextView(getActivity());
-		num_val_tot.setText(numvalstr);
-		num_val_tot.setTextColor(Color.BLACK);
-		num_val_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
-		num_val_tot.setTextSize(Config.getTextSize());
-
-		String sumkalstr = "مجموع الكلمات : " ;
-		sumkalstr += group.getSumKal(2);
-		TextView sum_kal_tot = new TextView(getActivity());
-		sum_kal_tot.setText(sumkalstr);
-		sum_kal_tot.setTextColor(Color.BLACK);
-		sum_kal_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
-		sum_kal_tot.setTextSize(Config.getTextSize());
-
-		String sumharstr = "مجموع حروف الكلمات : " ;
-		sumharstr += group.getSumHar(2);
-		TextView sum_har_tot = new TextView(getActivity());
-		sum_har_tot.setText(sumharstr);
-		sum_har_tot.setTextColor(Color.BLACK);
-		sum_har_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
-		sum_har_tot.setTextSize(Config.getTextSize());
-		if ((group.getNumVal(2)  % 19) == 0)
-		{
-			num_val_tot.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-			num_val_tot.setBackgroundColor(Color.argb(90, 62, 102, 191));
-		}
-
-		if (showNumericValueInGroup)calculTotType2.addView(num_val_tot);
-		if (showKalimaSumInGroup)calculTotType2.addView(sum_kal_tot);
-		if (showHarfSumInGroup)calculTotType2.addView(sum_har_tot);
-		return calculTotType2;
-	}
-
-	public View getTotalGroupType1View(QuranGroup group)
-	{
-		LinearLayout calculTotType1 = new LinearLayout(getActivity());
-		calculTotType1.setOrientation(LinearLayout.VERTICAL);
-		calculTotType1.setBackgroundColor(Color.YELLOW);
-
-		String numvalstr = "مجموع القيم العددية : " ;
-		numvalstr += group.getNumVal(1) + " = " + ((((group.getNumVal(1) / 19) % 19) == 0) ?((group.getNumVal(1) / 19 / 19) + " * 19"): (group.getNumVal(1) / 19)) + " * 19 " + (((group.getNumVal(1) % 19) > 0) ?" + " + (group.getNumVal(1) % 19): "");
-		String sumkalstr = "مجموع الكلمات : " ;
-		sumkalstr += group.getSumKal(1);
-		String sumharstr = "مجموع حروف الكلمات : " ;
-		sumharstr += group.getSumHar(1);
-
-		TextView num_val_tot = new TextView(getActivity());
-		num_val_tot.setText(numvalstr);
-		num_val_tot.setTextColor(Color.BLACK);
-		num_val_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
-		num_val_tot.setTextSize(Config.getTextSize());
-		TextView sum_kal_tot = new TextView(getActivity());
-		sum_kal_tot.setText(sumkalstr);
-		sum_kal_tot.setTextColor(Color.BLACK);
-		sum_kal_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
-		sum_kal_tot.setTextSize(Config.getTextSize());
-		TextView sum_har_tot = new TextView(getActivity());
-		sum_har_tot.setText(sumharstr);
-		sum_har_tot.setTextColor(Color.BLACK);
-		sum_har_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
-		sum_har_tot.setTextSize(Config.getTextSize());
-		if ((group.getNumVal(1)  % 19) == 0)
-		{
-			num_val_tot.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-			num_val_tot.setBackgroundColor(Color.argb(90, 62, 102, 191));
-		}
-
-		if (showNumericValueInGroup)calculTotType1.addView(num_val_tot);
-		if (showKalimaSumInGroup)calculTotType1.addView(sum_kal_tot);
-		if (showHarfSumInGroup)calculTotType1.addView(sum_har_tot);
-
-		return calculTotType1;
-	}
-
+	
 	public View getTotalGroupTypeView(QuranGroup group, int type)
 	{
 		LinearLayout calculTotType = new LinearLayout(getActivity());
@@ -215,7 +134,9 @@ public class MiracleDialog extends DialogFragment
 		sumkalstr += group.getSumKal(type);
 		String sumharstr = "مجموع حروف الكلمات : " ;
 		sumharstr += group.getSumHar(type);
-
+		String repitnumstr = "تكرار العبارات : ";
+		repitnumstr += group.getRepitNum(type);
+		
 		TextView num_val_tot = new TextView(getActivity());
 		num_val_tot.setText(numvalstr);
 		num_val_tot.setTextColor(Color.BLACK);
@@ -231,6 +152,12 @@ public class MiracleDialog extends DialogFragment
 		sum_har_tot.setTextColor(Color.BLACK);
 		sum_har_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
 		sum_har_tot.setTextSize(Config.getTextSize());
+		TextView repit_num_tot = new TextView(getActivity());
+		repit_num_tot.setText(repitnumstr);
+		repit_num_tot.setTextColor(Color.BLACK);
+		repit_num_tot.setTextDirection(TextView.TEXT_DIRECTION_RTL);
+		repit_num_tot.setTextSize(Config.getTextSize());
+		
 		if ((group.getNumVal(type) % 19) == 0)
 		{
 			num_val_tot.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -240,7 +167,8 @@ public class MiracleDialog extends DialogFragment
 		if (showNumericValueInGroup)calculTotType.addView(num_val_tot);
 		if (showKalimaSumInGroup)calculTotType.addView(sum_kal_tot);
 		if (showHarfSumInGroup)calculTotType.addView(sum_har_tot);
-
+		if (showRepitNumInGroup)calculTotType.addView(repit_num_tot);
+		
 		return calculTotType;
 	}
 
@@ -376,8 +304,13 @@ public class MiracleDialog extends DialogFragment
 
 	public void selectQuranGroup(QuranGroup group)
 	{
+		int type = 1;
 		for (QuranPart part : group.quranparts)
 		{
+			if(type != part.type){
+				Selection.addSeparator();
+				type = part.type;
+			}
 			Selection.startSelect(part.kalimaDeb, part.glyphDeb, Selection.SELECTION_TYPE_GLYPH); 
 			Selection.endSelect(part.kalimaFin, part.glyphFin, null);	
 		}
