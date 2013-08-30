@@ -185,10 +185,12 @@ public class Selection
 	public static Select getLastSelect()
 	{
 		Select sel = null;
-		
-		for(int i = selects.size() - 1; i >0; i--){
+		System.out.println(selects.size());
+		for(int i = selects.size() - 1; i >=0; i--){
 			if(selects.get(i).selectionType != SELECTION_TYPE_SEPARATOR){
 				sel = selects.get(i);
+				System.out.println(sel);
+				System.out.println(sel.glyphDeb);
 				break;
 			}
 		}

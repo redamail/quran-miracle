@@ -148,7 +148,8 @@ public class PageSlideFragment extends Fragment
 										if (glyph.getType() == Glyph.GLYPH_TYPE_KALIMA)
 										{
 											Kalima kalDeb = Connection.getKalimaKalimaId(glyph.getSura_number(), glyph.getAyah_number(), glyph.getKalima_number());
-											Selection.startSelect(kalDeb, glyph, Selection.SELECTION_TYPE_GLYPH);
+											Glyph glyDeb = Connection.getGlyphKalima(kalDeb);
+											Selection.startSelect(kalDeb, glyDeb, Selection.SELECTION_TYPE_GLYPH);
 											refreshSelection();
 										}
 									}
