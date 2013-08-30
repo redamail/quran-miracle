@@ -169,16 +169,13 @@ public class Connection
 
 	public static Glyph getGlyphPage(float x, float y, int numpage)
 	{
-		//System.out.println("avant / x / "+x+", y / "+y);
 		x = (x - Config.getImageMinX()) / Config.getRatioImageWidthDb() ;
 		y = (y  - Config.getImageMinY()) / Config.getRatioImageHeightDb() ;
-		//System.out.println("apres / x / "+x+", y / "+y);
 		String query = "select glyph_id, page_number, line_number, sura_number, ayah_number, position, min_x, max_x, min_y, max_y, type, kalima_number from glyphs where page_number=" + numpage + " and " + x + ">min_x and " + x + "<max_x and " + y + ">min_y and " + y + "<max_y";
 		Cursor cur = Connection.db2.rawQuery(query, new String [] {});
 		Glyph glyph = null;
 		if (cur.getCount() > 0)
 		{
-			//System.out.println("glyph trouve");
 			cur.moveToFirst();
 			glyph = new Glyph(cur.getInt(0), cur.getInt(1), cur.getInt(2), cur.getInt(3), cur.getInt(4), cur.getInt(5), cur.getInt(6), cur.getInt(7), cur.getInt(8), cur.getInt(9), cur.getInt(10), cur.getInt(11));
 		}
@@ -239,8 +236,6 @@ public class Connection
 	{
 		String query="";
 
-		//int position = 0;
-		//int nextPosition = 0;
 		int groupe = getNextQuranMiracle19Groupe();
 		query = "insert into quran_miracle_19 (sourat_deb,ayah_deb,kalima_deb,page_deb,sourat_fin,ayah_fin,kalima_fin,page_fin, position, next, groupe, type, num_val, sum_kal, sum_har) values ";	
 

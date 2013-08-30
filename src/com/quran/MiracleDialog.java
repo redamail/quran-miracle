@@ -304,10 +304,13 @@ public class MiracleDialog extends DialogFragment
 
 	public void selectQuranGroup(QuranGroup group)
 	{
-		int type = 1;
+		int type = 0;
 		for (QuranPart part : group.quranparts)
 		{
-			if(type != part.type){
+			if(type==0){
+				type = part.type;
+			}
+			else if (type != part.type){
 				Selection.addSeparator();
 				type = part.type;
 			}
