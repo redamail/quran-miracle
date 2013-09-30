@@ -23,8 +23,8 @@ public class Config
 	private static boolean canEditQuranMiracle = false;
 	private static String db2Adress = Constant.AYAHINFO_800_ADRESS;
 	private static String db1Adress = Constant.QURAN_ADRESS;
-	private static String imageAdress = Constant.IMAGE_1024_ADRESS;
-	private static float textSize = Constant.TEXT_SIZE_20;
+	private static String imageAdress = Constant.IMAGE_800_ADRESS;
+	private static float textSize = Constant.TEXT_SIZE_16;
 	private static float quranPagePortraitWidth = Constant.DEFAULT_QURAN_PAGE_PORTRAIT_WIDTH;
 	private static float quranPagePortraitHeight = Constant.DEFAULT_QURAN_PAGE_PORTRAIT_HEIGHT;
 	private static float quranPagePaysageWidth = Constant.DEFAULT_QURAN_PAGE_PAYSAGE_WIDTH;

@@ -141,6 +141,8 @@ public class PageSlideFragment extends Fragment
 											Glyph glyFin = Connection.getGlyphKalima(kalFin);
 											Selection.endSelect(kalFin, glyFin, ayah);
 											refreshSelection();
+											pageActivity.vibe.vibrate(20);
+											pageActivity.vibe.vibrate(20);
 
 										}
 										else
@@ -151,6 +153,7 @@ public class PageSlideFragment extends Fragment
 											Glyph glyDeb = Connection.getGlyphKalima(kalDeb);
 											Selection.startSelect(kalDeb, glyDeb, Selection.SELECTION_TYPE_GLYPH);
 											refreshSelection();
+											pageActivity.vibe.vibrate(40);
 										}
 									}
 									//si clic court
@@ -208,6 +211,8 @@ public class PageSlideFragment extends Fragment
 								{
 									Selection.endSelect(Connection.getKalimaGlyph(glyph), glyph, null);
 									refreshSelection();
+									pageActivity.vibe.vibrate(20);
+									pageActivity.vibe.vibrate(20);
 								}
 							}
 						}

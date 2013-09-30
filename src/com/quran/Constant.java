@@ -28,12 +28,12 @@ public class Constant
 	public static final String CALL_PARAM_SEARCH_COMPLETE = "SEARCH_COMPLETE";
 	public static final String CALL_PARAM_SEARCH_CONSIDER_ALIF = "SEARCH_CONSIDER_ALIF";
 	public static final String CALL_PARAM_SEARCH_SELECT_AYAH_KALIMA ="SEARCH_SELECT_AYAH_KALIMA";
-	public static final String QURAN_DATA_FOLDER = "/storage/sdcard0/AppProjects/quran-miracle-data/";
+	public static final String QURAN_DATA_FOLDER = "/storage/sdcard1/AppProjects/quran-miracle-data/";
 	public static final String AYAHINFO_800_ADRESS =  QURAN_DATA_FOLDER+"ayahinfo_800.db";
 	//public static final String AYAHINFO_1024_ADRESS = QURAN_DATA_FOLDER+"ayahinfo_1024.db";
 	public static final String QURAN_ADRESS = QURAN_DATA_FOLDER+"Coran.db";
-	//public static final String IMAGE_800_ADRESS = "/sdcard/quran_android/width_800/";
-	public static final String IMAGE_1024_ADRESS = "/sdcard/quran_android/width_1024/";
+	public static final String IMAGE_800_ADRESS = "/sdcard/quran_android/width_800/";
+	//public static final String IMAGE_1024_ADRESS = "/sdcard/quran_android/width_1024/";
 	public static final float TEXT_SIZE_16 = 16;
 	public static final float TEXT_SIZE_20 = 20;
 	

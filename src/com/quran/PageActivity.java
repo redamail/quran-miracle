@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.*;
 import android.view.ContextMenu.*;
+import android.os.Vibrator;
+import android.content.Context;
 
 public class PageActivity extends FragmentActivity implements ViewPager.OnPageChangeListener 
 {
@@ -28,6 +30,7 @@ public class PageActivity extends FragmentActivity implements ViewPager.OnPageCh
 	boolean selectAyah = false;
 	static Ayah ayah;
 	int activePage;
+	public Vibrator vibe;
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -36,6 +39,8 @@ public class PageActivity extends FragmentActivity implements ViewPager.OnPageCh
 
 		setContentView(R.layout.viewpager_layout);
 
+		vibe = (Vibrator) PageActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+		
 		NUM_PAGES = Connection.getNumPages();
 
 		Intent intent = getIntent();
